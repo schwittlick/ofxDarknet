@@ -3,6 +3,7 @@
 #include "parser.h"
 #include "blas.h"
 #include "utils.h"
+#include "nightmare.h"
 
 #ifdef OPENCV
 #include "opencv2/highgui/highgui_c.h"
