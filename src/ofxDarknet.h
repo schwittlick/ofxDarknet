@@ -30,6 +30,8 @@
 #include "shortcut_layer.h"
 #include "cuda.h"
 #include "utils.h"
+#include "nightmare.h"
+#include "rnn.h"
 
 #include "ofxOpenCv.h"
 
@@ -43,6 +45,11 @@ struct detected_object {
 	float probability;
 };
 
+struct classification {
+	std::string label;
+	float probability;
+};
+
 class ofxDarknet
 {
 public:
@@ -50,7 +57,10 @@ public:
 	~ofxDarknet();
 
 	void init( char *datacfg = "cfg/coco.data", char *cfgfile = "cfg/yolo.cfg", char *weightfile = "yolo.weights", char *nameslist = "data/names.list" );
-	std::vector< detected_object > detect( ofPixels & pix, float threshold = 0.24f );
+	std::vector< detected_object > yolo( ofPixels & pix, float threshold = 0.24f );
+	ofImage nightmate( ofPixels pix );
+	std::vector< classification > classify( ofPixels & pix );
+	std::string rnn( int num, std::string seed, float temp, int rseed );
 
 private:
 	list1 *options1;
