@@ -8,17 +8,15 @@ ofxDarknet::~ofxDarknet()
 {
 }
 
-void ofxDarknet::init( char *datacfg /*= "cfg/coco.data"*/, char *cfgfile /*= "cfg/yolo.cfg"*/, char *weightfile /*= "yolo.weights"*/, char *nameslist /*= "data/names.list" */ )
+void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string datacfg, std::string nameslist )
 {
-	options1 = read_data_cfg( datacfg );
-	name_list = option_find_str( options1, "names", nameslist );
+	options1 = read_data_cfg( str2char( datacfg ) );
+	name_list = option_find_str( options1, "names", str2char( nameslist ) );
 	names = get_labels( name_list );
 
 	alphabet = load_alphabet();
-	net = parse_network_cfg( cfgfile );
-	if( weightfile ) {
-		load_weights( &net, weightfile );
-	}
+	net = parse_network_cfg( str2char( cfgfile ) );
+	load_weights( &net, str2char( weightfile ) );
 	set_batch_network( &net, 1 );
 }
 
@@ -42,33 +40,21 @@ std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold
 	network_predict( net, X );
 	get_region_boxes( l, 1, 1, threshold, probs, boxes, 0, 0 );
 	do_nms_sort( boxes, probs, l.w*l.h*l.n, l.classes, 0.4 );
-	//draw_detections( im, l.w*l.h*l.n, thresh, boxes, probs, names, alphabet, l.classes );
-	//show_image( im, "predictions" );
 	free_image( sized );
 	free_image( im );
 	std::vector< detected_object > detections;
 
 	int num = l.w*l.h*l.n;
-
 	for( int i = 0; i < num; ++i ) {
 		int class1 = max_index( probs[ i ], l.classes );
 		float prob = probs[ i ][ class1 ];
 		if( prob > threshold ) {
 
-			int width = im.h * .012;
-
-			if( 0 ) {
-				width = pow( prob, 1. / 2. ) * 10 + 1;
-				alphabet = 0;
-			}
-
 			int offset = class1 * 123457 % l.classes;
 			float red = get_color( 2, offset, l.classes );
 			float green = get_color( 1, offset, l.classes );
 			float blue = get_color( 0, offset, l.classes );
-			float rgb[ 3 ];
 
-			//width = prob*20+2;
 			box b = boxes[ i ];
 
 			int left = ( b.x - b.w / 2. )*im.w;
@@ -86,14 +72,11 @@ std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold
 			right = ofMap( right, 0, net.w, 0, originalWidth );
 			bot = ofMap( bot, 0, net.h, 0, originalHeight );
 
-			rgb[ 0 ] = red;
-			rgb[ 1 ] = green;
-			rgb[ 2 ] = blue;
-
 			detected_object detection;
 			detection.label = names[ class1 ];
 			detection.probability = prob;
 			detection.rect = ofRectangle( left, top, right - left, bot - top );
+			detection.color = ofColor( red * 255, green * 255, blue * 255);
 
 			detections.push_back( detection );
 		}
@@ -101,134 +84,31 @@ std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold
 	return detections;
 }
 
-ofImage ofxDarknet::nightmate( ofPixels pix )
+ofImage ofxDarknet::nightmate( ofPixels & pix )
 {
-	char *cfg = "cfg/vgg-conv.cfg";
-	char *weights = "vgg-conv.weights";
-
-	//char *cfg = "cfg/jnet-conv.cfg";
-	//char *weights = "jnet-conv.weights";
-
-	char *input = "data/1469625954789.jpg";
-	int max_layer = 7;
-
-	int range = 1;
+	int max_layer = 13;
+	int range = 3;
 	int norm = 1;
-	int rounds = 1;
-	int iters = 10;
+	int rounds = 4;
+	int iters = 20;
 	int octaves = 4;
-	float zoom = 1.0;
-	float rate = 0.04;
+	float rate = 0.01;
 	float thresh = 1.0;
-	float rotate = 0;
-	float momentum = 0.9;
-	float lambda = 0.01;
-	char *prefix = 0;
-	int reconstruct = 0; //1
-	int smooth_size = 1;
 
-	network net = parse_network_cfg( cfg );
-	load_weights( &net, weights );
-	char *cfgbase = basecfg( cfg );
-	char *imbase = basecfg( input );
+	image im = convert( pix );
 
-	set_batch_network( &net, 1 );
-	image im = load_image_color( input, 0, 0 );
-	if( 0 ) {
-		float scale = 1;
-		if( im.w > 512 || im.h > 512 ) {
-			if( im.w > im.h ) scale = 512.0 / im.w;
-			else scale = 512.0 / im.h;
-		}
-		image resized = resize_image( im, scale*im.w, scale*im.h );
-		free_image( im );
-		im = resized;
-	}
-
-	float *features = 0;
-	image update;
-	if( reconstruct ) {
-		resize_network( &net, im.w, im.h );
-
-		int zz = 0;
-		network_predict( net, im.data1 );
-		image out_im = get_network_image( net );
-		image crop = crop_image( out_im, zz, zz, out_im.w - 2 * zz, out_im.h - 2 * zz );
-		//flip_image(crop);
-		image f_im = resize_image( crop, out_im.w, out_im.h );
-		free_image( crop );
-		printf( "%d features\n", out_im.w*out_im.h*out_im.c );
-
-
-		im = resize_image( im, im.w, im.h );
-		f_im = resize_image( f_im, f_im.w, f_im.h );
-		features = f_im.data1;
-
-		int i;
-		for( i = 0; i < 14 * 14 * 512; ++i ) {
-			features[ i ] += rand_uniform( -.19, .19 );
-		}
-
-		free_image( im );
-		im = make_random_image( im.w, im.h, im.c );
-		update = make_image( im.w, im.h, im.c );
-
-	}
-
-	int e;
-	int n;
-	for( e = 0; e < rounds; ++e ) {
+	for( int e = 0; e < rounds; ++e ) {
 		fprintf( stderr, "Iteration: " );
 		fflush( stderr );
-		for( n = 0; n < iters; ++n ) {
+		for( int n = 0; n < iters; ++n ) {
 			fprintf( stderr, "%d, ", n );
 			fflush( stderr );
-			if( reconstruct ) {
-				reconstruct_picture( net, features, im, update, rate, momentum, lambda, smooth_size, 1 );
-				//if ((n+1)%30 == 0) rate *= .5;
-				show_image( im, "reconstruction" );
-#ifdef OPENCV
-				cvWaitKey( 10 );
-#endif
-			}
-			else {
-				int layer = max_layer + rand() % range - range / 2;
-				int octave = rand() % octaves;
-				optimize_picture( &net, im, layer, 1 / pow( 1.33333333, octave ), rate, thresh, norm );
-			}
+			int layer = max_layer + rand() % range - range / 2;
+			int octave = rand() % octaves;
+			optimize_picture( &net, im, layer, 1 / pow( 1.33333333, octave ), rate, thresh, norm );
 		}
-		fprintf( stderr, "done\n" );
-		if( 0 ) {
-			image g = grayscale_image( im );
-			free_image( im );
-			im = g;
-		}
-		char buff[ 256 ];
-		if( prefix ) {
-			sprintf( buff, "%s/%s_%s_%d_%06d", prefix, imbase, cfgbase, max_layer, e );
-		}
-		else {
-			sprintf( buff, "%s_%s_%d_%06d", imbase, cfgbase, max_layer, e );
-		}
-		printf( "%d %s\n", e, buff );
-		save_image( im, buff );
-
-		show_image(im, buff);
-		//cvWaitKey(0);
-
-		if( rotate ) {
-			image rot = rotate_image( im, rotate );
-			free_image( im );
-			im = rot;
-		}
-		image crop = crop_image( im, im.w * ( 1. - zoom ) / 2., im.h * ( 1. - zoom ) / 2., im.w*zoom, im.h*zoom );
-		image resized = resize_image( crop, im.w, im.h );
-		free_image( im );
-		free_image( crop );
-		im = resized;
 	}
-
-	return ofImage();
+	return ofImage( convert( im ) );
 }
 
 std::vector< classification > ofxDarknet::classify( ofPixels & pix )
@@ -259,23 +139,22 @@ std::vector< classification > ofxDarknet::classify( ofPixels & pix )
 	return classifications;
 }
 
-std::string ofxDarknet::rnn(int num, std::string seed, float temp, int rseed )
+std::string ofxDarknet::rnn(int num, std::string seed, float temp )
 {
 	int inputs = get_network_input_size( net );
 
-	std::vector<char> v( seed.length() + 1 );
-	std::strcpy( &v[ 0 ], seed.c_str() );
-	char* s = &v[ 0 ];
+	for( int i = 0; i < net.n; ++i )
+	{
+		net.layers[ i ].temperature = temp;
+	}
 
-	int i, j;
-	for( i = 0; i < net.n; ++i ) net.layers[ i ].temperature = temp;
 	int c = 0;
 	int len = seed.length();
 	float *input = ( float* ) calloc( inputs, sizeof( float ) );
 
 	std::string sampled_text;
 
-	for( i = 0; i < len - 1; ++i ) {
+	for( int i = 0; i < len - 1; ++i ) {
 		c = seed[ i ];
 		input[ c ] = 1;
 		network_predict( net, input );
@@ -290,11 +169,11 @@ std::string ofxDarknet::rnn(int num, std::string seed, float temp, int rseed )
 	char _c = c;
 	sampled_text += _c;
 	
-	for( i = 0; i < num; ++i ) {
+	for( int i = 0; i < num; ++i ) {
 		input[ c ] = 1;
 		float *out = network_predict( net, input );
 		input[ c ] = 0;
-		for( j = 0; j < inputs; ++j ) {
+		for( int j = 0; j < inputs; ++j ) {
 			if( out[ j ] < .0001 ) out[ j ] = 0;
 		}
 		c = sample_array( out, inputs );
@@ -302,6 +181,9 @@ std::string ofxDarknet::rnn(int num, std::string seed, float temp, int rseed )
 		char _c = c;
 		sampled_text += _c;
 	}
+
+	delete input;
+
 	return sampled_text;
 }
 
@@ -324,4 +206,27 @@ image ofxDarknet::convert( ofPixels & pix )
 	}
 
 	return im;
+}
+
+ofPixels ofxDarknet::convert( image & im )
+{
+	unsigned char *data = ( unsigned char* ) calloc( im.w*im.h*im.c, sizeof( char ) );
+	int i, k;
+	for( k = 0; k < im.c; ++k ) {
+		for( i = 0; i < im.w*im.h; ++i ) {
+			data[ i*im.c + k ] = ( unsigned char ) ( 255 * im.data1[ i + k*im.w*im.h ] );
+		}
+	}
+
+	ofPixels pix;
+	pix.setFromPixels( data, im.w, im.h, im.c );
+	return pix;
+}
+
+char * ofxDarknet::str2char( std::string string )
+{
+	std::vector<char> v( string.length() + 1 );
+	std::strcpy( &v[ 0 ], string.c_str() );
+	char* ch = &v[ 0 ];
+	return ch;
 }

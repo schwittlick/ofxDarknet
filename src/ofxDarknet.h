@@ -43,6 +43,7 @@ struct detected_object {
 	ofRectangle rect;
 	std::string label;
 	float probability;
+	ofColor color;
 };
 
 struct classification {
@@ -56,11 +57,11 @@ public:
 	ofxDarknet();
 	~ofxDarknet();
 
-	void init( char *datacfg = "cfg/coco.data", char *cfgfile = "cfg/yolo.cfg", char *weightfile = "yolo.weights", char *nameslist = "data/names.list" );
+	void init( std::string cfgfile, std::string weightfile, std::string datacfg = "cfg/coco.data", std::string nameslist = "data/names.list" );
 	std::vector< detected_object > yolo( ofPixels & pix, float threshold = 0.24f );
-	ofImage nightmate( ofPixels pix );
+	ofImage nightmate( ofPixels & pix );
 	std::vector< classification > classify( ofPixels & pix );
-	std::string rnn( int num, std::string seed, float temp, int rseed );
+	std::string rnn( int num, std::string seed, float temp );
 
 private:
 	list1 *options1;
@@ -71,4 +72,6 @@ private:
 	network net;
 
 	image convert( ofPixels & pix );
+	ofPixels convert( image & image );
+	char * str2char( std::string string );
 };
