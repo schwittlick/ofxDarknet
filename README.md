@@ -14,6 +14,10 @@ ofxDarknet is a openFrameworks wrapper for Darknet, the open source neural netwo
 
 ### Deep Dream (http://pjreddie.com/darknet/nightmare/)
 
+640x480 image uses 1.5gb ram on your graphics card.
+
+![DeepDream](https://raw.githubusercontent.com/mrzl/ofxDarknet/master/images/deep_dream.jpg)
+
 
 ### Recurrent Neural Network (http://pjreddie.com/darknet/rnns-in-darknet/)
 
