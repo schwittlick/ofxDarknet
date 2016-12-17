@@ -18,8 +18,9 @@ ofxDarknet is a openFrameworks wrapper for Darknet, the open source neural netwo
 
 ![DeepDream](https://raw.githubusercontent.com/mrzl/ofxDarknet/master/images/deep_dream.jpg)
 
-
 ### Recurrent Neural Network (http://pjreddie.com/darknet/rnns-in-darknet/)
+
+![RNN](https://raw.githubusercontent.com/mrzl/ofxDarknet/master/images/rnn.jpg)
 
 ## Setup
 

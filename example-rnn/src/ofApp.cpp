@@ -5,13 +5,6 @@ void ofApp::setup()
 	std::string cfgfile = "cfg/rnn.cfg";
 	std::string weightfile = "data/parsed_v3_arts_arthistory_aesthetics_valid.weights";
 	darknet.init( cfgfile, weightfile );
-
-	camWidth = 640;  // try to grab at this size.
-	camHeight = 480;
-
-	video.setDeviceID( 0 );
-	video.setDesiredFrameRate( 30 );
-	video.initGrabber( camWidth, camHeight );
 }
 
 void ofApp::update()
@@ -21,9 +14,15 @@ void ofApp::update()
 
 void ofApp::draw()
 {
-	ofBackground( 0 );
 	ofDrawBitmapStringHighlight( "Input: " + seed_text, 20, 20 );
-	ofDrawBitmapStringHighlight( generated_text, 20, 60 );
+
+	int offset = 60;
+	for( std::string s : generated_texts )
+	{
+		ofDrawBitmapStringHighlight( s, 20, offset );
+
+		offset += 30;
+	}
 }
 
 void ofApp::keyReleased( int key )
@@ -35,6 +34,11 @@ void ofApp::keyReleased( int key )
 		char k = key;
 		seed_text += k;
 	}
-	
-	generated_text = darknet.rnn( 50, seed_text, 0.8 );
+
+	generated_texts.clear();
+	for( int i = 0; i < 13; i++ )
+	{
+		std::string generated_text = darknet.rnn( 50, seed_text, 0.8 );
+		generated_texts.push_back( generated_text );
+	}
 }

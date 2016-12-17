@@ -13,9 +13,8 @@ public:
 	void keyReleased( int key );
 
 	ofxDarknet darknet;
-	int camWidth, camHeight;
-	ofVideoGrabber video;
 	
-	std::string seed_text, generated_text;
+	std::string seed_text;
+	std::vector< std::string > generated_texts;
 };
 
