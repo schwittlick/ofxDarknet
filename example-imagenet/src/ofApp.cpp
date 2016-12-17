@@ -2,12 +2,11 @@
 
 void ofApp::setup() 
 {
-	char *datacfg = "cfg/imagenet1k.data";
-	char *cfgfile = "cfg/darknet.cfg";
-	char *weightfile = "darknet.weights";
-	char *nameslist = "data/labels.list";
-
-	darknet.init( datacfg, cfgfile, weightfile, nameslist );
+	std::string datacfg = "cfg/imagenet1k.data";
+	std::string cfgfile = "cfg/darknet.cfg";
+	std::string weightfile = "darknet.weights";
+	std::string nameslist = "data/labels.list";
+	darknet.init( cfgfile, weightfile, datacfg, nameslist );
 
 	camWidth = 640;  // try to grab at this size.
 	camHeight = 480;

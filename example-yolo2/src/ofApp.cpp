@@ -2,12 +2,11 @@
 
 void ofApp::setup() 
 {
-	char *datacfg = "cfg/coco.data";
-	char *cfgfile = "cfg/yolo.cfg";
-	char *weightfile = "yolo.weights";
-	char *nameslist = "data/names.list";
-
-	darknet.init( datacfg, cfgfile, weightfile, nameslist );
+	std::string datacfg = "cfg/coco.data";
+	std::string cfgfile = "cfg/yolo.cfg";
+	std::string weightfile = "yolo.weights";
+	std::string nameslist = "data/names.list";
+	darknet.init( cfgfile, weightfile, datacfg, nameslist );
 
 	camWidth = 640;  // try to grab at this size.
 	camHeight = 480;
@@ -29,12 +28,16 @@ void ofApp::draw()
 	if( video.isFrameNew() ) {
 		std::vector< detected_object > detections = darknet.yolo( video.getPixelsRef(), thresh );
 
-		ofSetColor( 255 );
+		ofSetColor( d.color );
 		video.draw( 0, 0 );
 		ofNoFill();
 		for( detected_object d : detections )
 		{
+			ofSetColor( d.color );
+			glLineWidth( ofMap( d.probability, 0, 1, 0, 8 ) );
+			ofNoFill();
 			ofDrawRectangle( d.rect );
+			ofDrawBitmapStringHighlight( d.label + ": " + ofToString(d.probability), d.rect.x, d.rect.y + 20 );
 		}
 	}
 }
