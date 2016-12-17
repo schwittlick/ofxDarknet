@@ -9,7 +9,6 @@ void ofApp::setup()
 
 void ofApp::update()
 {
-	video.update();
 }
 
 void ofApp::draw()
