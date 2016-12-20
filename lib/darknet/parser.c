@@ -583,7 +583,7 @@ int is_network(section *s)
             || strcmp(s->type, "[network]")==0);
 }
 
-network parse_network_cfg(char *filename)
+network parse_network_cfg(const char *filename)
 {
     list1 *sections = read_cfg(filename);
     node *n = sections->front;
@@ -700,7 +700,7 @@ network parse_network_cfg(char *filename)
     return net;
 }
 
-list1 *read_cfg(char *filename)
+list1 *read_cfg(const char *filename)
 {
     FILE *file = fopen(filename, "r");
     if(file == 0) file_error(filename);
@@ -1007,7 +1007,7 @@ void load_convolutional_weights(layer l, FILE *fp)
 }
 
 
-void load_weights_upto(network *net, char *filename, int cutoff)
+void load_weights_upto(network *net, const char *filename, int cutoff)
 {
 #ifdef GPU
     if(net->gpu_index >= 0){
@@ -1075,7 +1075,7 @@ void load_weights_upto(network *net, char *filename, int cutoff)
     fclose(fp);
 }
 
-void load_weights(network *net, char *filename)
+void load_weights(network *net, const char *filename)
 {
     load_weights_upto(net, filename, net->n);
 }

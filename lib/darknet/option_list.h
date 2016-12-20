@@ -11,8 +11,8 @@ typedef struct{
 #ifdef __cplusplus 
 extern "C" {
 #endif
-	list1 *read_data_cfg( char *filename );
-	char *option_find_str( list1 *l, char *key, char *def );
+	list1 *read_data_cfg( const char *filename );
+	char *option_find_str( list1 *l, char *key, const char *def );
 	int option_find_int( list1 *l, char *key, int def );
 #ifdef __cplusplus 
 }

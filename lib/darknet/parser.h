@@ -4,8 +4,8 @@
 #ifdef __cplusplus 
 extern "C" {
 #endif
-	network parse_network_cfg( char *filename );
-	void load_weights( network *net, char *filename );
+	network parse_network_cfg( const char *filename );
+	void load_weights( network *net, const char *filename );
 #ifdef __cplusplus 
 }
 #endif

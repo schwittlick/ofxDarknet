@@ -6,7 +6,7 @@
 #include "option_list.h"
 #include "utils.h"
 
-list1 *read_data_cfg(char *filename)
+list1 *read_data_cfg(const char *filename)
 {
     FILE *file = fopen(filename, "r");
     if(file == 0) file_error(filename);
@@ -86,7 +86,7 @@ char *option_find(list1 *l, char *key)
     }
     return 0;
 }
-char *option_find_str(list1 *l, char *key, char *def)
+char *option_find_str(list1 *l, char *key, const char *def)
 {
     char *v = option_find(l, key);
     if(v) return v;

@@ -191,7 +191,7 @@ void backward_deconvolutional_layer(deconvolutional_layer l, network_state state
     }
 }
 
-void update_deconvolutional_layer(deconvolutional_layer l, float learning_rate, float momentum, float decay)
+void update_deconvolutional_layer(deconvolutional_layer l, int i, float learning_rate, float momentum, float decay)
 {
     int size = l.size*l.size*l.c*l.n;
     axpy_cpu(l.n, learning_rate, l.bias_updates, 1, l.biases, 1);
