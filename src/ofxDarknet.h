@@ -63,6 +63,8 @@ public:
 	std::vector< classification > classify( ofPixels & pix, int count = 5 );
 	std::string rnn( int num, std::string seed, float temp );
 
+	void train_rnn( std::string textfile, std::string cfgfile );
+
 private:
 	list1 *options1;
 	char **names;
