@@ -118,7 +118,7 @@ char *find_char_arg(int argc, char **argv, char *arg, char *def)
 }
 
 
-char *basecfg(char *cfgfile)
+char *basecfg(const char *cfgfile)
 {
     char *c = cfgfile;
     char *next;

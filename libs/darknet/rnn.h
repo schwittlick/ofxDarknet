@@ -11,7 +11,8 @@ extern "C" {
 #endif
 	char **read_tokens( char *filename, size_t *read );
 	void print_symbol( int n, char **tokens );
-
+	void reset_rnn_state( network net, int b );
+	float_pair get_rnn_data( unsigned char *text, size_t *offsets, int characters, size_t len, int batch, int steps );
 #ifdef __cplusplus 
 }
 #endif
@@ -19,8 +20,8 @@ extern "C" {
 int *read_tokenized_data( char *filename, size_t *read );
 
 float_pair get_rnn_token_data( int *tokens, size_t *offsets, int characters, size_t len, int batch, int steps );
-float_pair get_rnn_data( unsigned char *text, size_t *offsets, int characters, size_t len, int batch, int steps );
-void reset_rnn_state( network net, int b );
+
+
 void train_char_rnn( char *cfgfile, char *weightfile, char *filename, int clear, int tokenized );
 
 void test_char_rnn( char *cfgfile, char *weightfile, int num, char *seed, float temp, int rseed, char *token_file );
