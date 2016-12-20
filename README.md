@@ -138,6 +138,13 @@ A postmodern collaborative writing effort containing Slavoj Žižek erotica, top
 
 ![RNN](https://raw.githubusercontent.com/mrzl/ofxDarknet/master/images/rnn.jpg)
 
+You can train your own RNN models with darknet
+
+```
+	// no need to init
+	darknet.train_rnn( "D:\\path\\to\\text\\text.txt", "cfg/rnn.cfg" );
+```
+
 ## Setup
 
 ### Windows
@@ -154,10 +161,6 @@ An OSX version is on the way and will be updated here..
 ## Training your own models
 
 ### YOLO
-
-tcb
-
-### RNN
 
 tcb
 
