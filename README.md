@@ -120,7 +120,7 @@ Darknet pre-trained weights files:
 ofxDarknet custom pre-trained weight files (each trained for 20h on NVidia TitanX):
 * [Anonymous - Hypersphere](http://mrzl.net/ofxdarknet/anonymous-hypersphere.weights)
 Hypersphere, written by Anonymous with the help of the 4chan board /lit/ (of The Legacy of Totalitarianism in a Tundra fame) is an epic tale spanning over 700 pages.
-A postmodern collaborative writing effort containing Slavoj Å½iÅ¾ek erotica, top secret Donald Trump emails, poetry, repair instructions for future cars, a history of bottles in the Ottoman empire; actually, it contains everything since it takes place in the Hypersphere, and the Hypersphere is a big place; really big in fact.
+A postmodern collaborative writing effort containing Slavoj Žižek erotica, top secret Donald Trump emails, poetry, repair instructions for future cars, a history of bottles in the Ottoman empire; actually, it contains everything since it takes place in the Hypersphere, and the Hypersphere is a big place; really big in fact.
 * [Books on art history & aesthetics](http://mrzl.net/ofxdarknet/arts_arthistory_aesthetics.weights)
 * [Books on digital culture](http://mrzl.net/ofxdarknet/digital_and_internet_theory.weights)
 
@@ -153,6 +153,12 @@ Install the dependencies for building darknet on Windows 10:
 * [Visual Studio 2015 (Community)](https://www.microsoft.com/download/details.aspx?id=48146)
 * [CUDA 8.0 64bit](https://developer.nvidia.com/cuda-downloads)
 * [OpenCV 2.4.9](https://sourceforge.net/projects/opencvlibrary/files/opencv-win/2.4.9/opencv-2.4.9.exe/download)
+
+There are some more necessary steps that don't work with the OF project generator:
+
+* Within VS2015 Solution Explorer, rightclick on the generated project -> Build Dependencies -> Build Customizations -> Tick CUDA 8.0
+* C/C++ -> Preprocessor -> Add: OPENCV, _TIMESPEC_DEFINED, _CRT_SECURE_NO_WARNINGS, GPU, _LIB, _MBCS, WIN32 _CONSOLE
+* C/C++ -> All Options -> Compile As -> Default
 
 ### OSX
 
