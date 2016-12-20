@@ -59,13 +59,12 @@ public:
 
 	void init( std::string cfgfile, std::string weightfile, std::string datacfg = "cfg/coco.data", std::string nameslist = "data/names.list" );
 	std::vector< detected_object > yolo( ofPixels & pix, float threshold = 0.24f );
-	ofImage nightmate( ofPixels & pix );
-	std::vector< classification > classify( ofPixels & pix );
+	ofImage nightmate( ofPixels & pix, int max_layer, int range, int norm, int rounds, int iters, int octaves, float rate, float thresh );
+	std::vector< classification > classify( ofPixels & pix, int count = 5 );
 	std::string rnn( int num, std::string seed, float temp );
 
 private:
 	list1 *options1;
-	char *name_list;
 	char **names;
 
 	image **alphabet;
@@ -73,5 +72,4 @@ private:
 
 	image convert( ofPixels & pix );
 	ofPixels convert( image & image );
-	char * str2char( std::string string );
 };

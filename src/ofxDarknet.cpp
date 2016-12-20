@@ -9,15 +9,14 @@ ofxDarknet::~ofxDarknet()
 }
 
 void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string datacfg, std::string nameslist )
-{
-	options1 = read_data_cfg( str2char( datacfg ) );
-	name_list = option_find_str( options1, "names", str2char( nameslist ) );
-	names = get_labels( name_list );
-
+{	
 	alphabet = load_alphabet();
-	net = parse_network_cfg( str2char( cfgfile ) );
-	load_weights( &net, str2char( weightfile ) );
+	net = parse_network_cfg( cfgfile.c_str() );
+	load_weights( &net, weightfile.c_str() );
 	set_batch_network( &net, 1 );
+
+	options1 = read_data_cfg( datacfg.c_str() );
+	names = get_labels( option_find_str( options1, "names", nameslist.c_str() ) );
 }
 
 std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold /*= 0.24f */ )
@@ -27,9 +26,6 @@ std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold
 	ofPixels  pix2( pix );
 	pix2.resize( net.w, net.h );
 	image im = convert( pix2 );
-	image sized = resize_image( im, net.w, net.h );
-
-	//im = resize_image( im, net.w, net.h );
 	layer l = net.layers[ net.n - 1 ];
 
 	box *boxes = ( box* ) calloc( l.w*l.h*l.n, sizeof( box ) );
@@ -40,7 +36,7 @@ std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold
 	network_predict( net, X );
 	get_region_boxes( l, 1, 1, threshold, probs, boxes, 0, 0 );
 	do_nms_sort( boxes, probs, l.w*l.h*l.n, l.classes, 0.4 );
-	free_image( sized );
+	//free_image( sized );
 	free_image( im );
 	std::vector< detected_object > detections;
 
@@ -84,17 +80,8 @@ std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold
 	return detections;
 }
 
-ofImage ofxDarknet::nightmate( ofPixels & pix )
+ofImage ofxDarknet::nightmate( ofPixels & pix, int max_layer, int range, int norm, int rounds, int iters, int octaves, float rate, float thresh )
 {
-	int max_layer = 13;
-	int range = 3;
-	int norm = 1;
-	int rounds = 4;
-	int iters = 20;
-	int octaves = 4;
-	float rate = 0.01;
-	float thresh = 1.0;
-
 	image im = convert( pix );
 
 	for( int e = 0; e < rounds; ++e ) {
@@ -111,29 +98,26 @@ ofImage ofxDarknet::nightmate( ofPixels & pix )
 	return ofImage( convert( im ) );
 }
 
-std::vector< classification > ofxDarknet::classify( ofPixels & pix )
+std::vector< classification > ofxDarknet::classify( ofPixels & pix, int count )
 {
-	int top = 5;
-	if( top == 0 ) top = option_find_int( options1, "top", 1 );
+	int *indexes = ( int* ) calloc( count, sizeof( int ) );
 
-	char **names = get_labels( name_list );
-	int *indexes = ( int* ) calloc( top, sizeof( int ) );
+	if( pix.getWidth() != net.w && pix.getHeight() != net.h ) {
+		pix.resize( net.w, net.h );
+	}
 
-	pix.resize( net.w, net.h );
 	image im = convert( pix );
-	//resize_network( &net, r.w, r.h );
 
 	float *predictions = network_predict( net, im.data1 );
-	//if( net.hierarchy ) hierarchy_predictions( predictions, net.outputs, net.hierarchy, 0 );
-	top_k( predictions, net.outputs, top, indexes );
+
+	top_k( predictions, net.outputs, count, indexes );
 	std::vector< classification > classifications;
-	for( int i = 0; i < top; ++i ) {
+	for( int i = 0; i < count; ++i ) {
 		int index = indexes[ i ];
 		classification c;
 		c.label = names[ index ];
 		c.probability = predictions[ index ];
 		classifications.push_back( c );
-		//if( net.hierarchy ) printf( "%d, %s: %f, parent: %s \n", index, names[ index ], predictions[ index ], ( net.hierarchy->parent[ index ] >= 0 ) ? names[ net.hierarchy->parent[ index ] ] : "Root" );
 	}
 	free_image( im );
 	return classifications;
@@ -221,12 +205,4 @@ ofPixels ofxDarknet::convert( image & im )
 	ofPixels pix;
 	pix.setFromPixels( data, im.w, im.h, im.c );
 	return pix;
-}
-
-char * ofxDarknet::str2char( std::string string )
-{
-	std::vector<char> v( string.length() + 1 );
-	std::strcpy( &v[ 0 ], string.c_str() );
-	char* ch = &v[ 0 ];
-	return ch;
 }
