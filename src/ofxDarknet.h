@@ -6,6 +6,8 @@
 
 #include "ofMain.h"
 
+#include "avgpool_layer.h"
+#include "activation_layer.h"
 #include "option_list.h"
 #include "image.h"
 #include "parser.h"
@@ -18,12 +20,11 @@
 #include "gru_layer.h"
 #include "rnn_layer.h"
 #include "crnn_layer.h"
-#include "activation_layer.h"
 #include "detection_layer.h"
 #include "region_layer.h"
 #include "normalization_layer.h"
 #include "reorg_layer.h"
-#include "avgpool_layer.h"
+
 #include "cost_layer.h"
 #include "softmax_layer.h"
 #include "route_layer.h"
@@ -69,7 +70,6 @@ private:
 	list1 *options1;
 	char **names;
 
-	image **alphabet;
 	network net;
 
 	image convert( ofPixels & pix );
