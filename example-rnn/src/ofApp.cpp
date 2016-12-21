@@ -3,12 +3,13 @@
 void ofApp::setup() 
 {
 	std::string cfgfile = "cfg/rnn.cfg";
-	std::string weightfile = "data/parsed_v3_arts_arthistory_aesthetics_valid.weights";
+	std::string weightfile = "data/arts_arthistory_aesthetics.weights";
 	darknet.init( cfgfile, weightfile );
 }
 
 void ofApp::update()
 {
+
 }
 
 void ofApp::draw()
