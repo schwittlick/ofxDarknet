@@ -158,9 +158,9 @@ There are some more necessary steps that don't work with the OF project generato
 
 * Compile as Debug or Release in x64 mode
 * Within VS2015 Solution Explorer, rightclick on the generated project -> Build Dependencies -> Build Customizations -> Tick CUDA 8.0
-* C/C++ -> Preprocessor -> Preprocessor Definitions > OPENCV;GPU;%(PreprocessorDefinitions)
+* C/C++ -> Preprocessor -> Preprocessor Definitions > GPU;%(PreprocessorDefinitions)
 * C/C++ -> All Options -> Compile As -> Default
-* Linker -> Input -> cublas.lib, curand.lib, cudart.lib, cudnn.lib
+* Linker -> Input -> cublas.lib, curand.lib, cudart.lib
 * Copy pthreadVC2.dll from ofxDarknet\libs\3rdparty\dll\x64 to your applications bin folder
 
 ### OSX
