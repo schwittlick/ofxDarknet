@@ -4,11 +4,11 @@ void ofApp::setup()
 {
 	std::string datacfg = "cfg/coco.data";
 	std::string cfgfile = "cfg/yolo.cfg";
-	std::string weightfile = "yolo.weights";
-	std::string nameslist = "data/names.list";
+	std::string weightfile = "data/yolo.weights";
+	std::string nameslist = "data/coco.list";
 	darknet.init( cfgfile, weightfile, datacfg, nameslist );
 
-	camWidth = 640;  // try to grab at this size.
+	camWidth = 640;
 	camHeight = 480;
 
 	video.setDeviceID( 0 );
@@ -31,9 +31,8 @@ void ofApp::draw()
 	if( video.isFrameNew() ) {
 		std::vector< detected_object > detections = darknet.yolo( video.getPixelsRef(), thresh );
 
-		ofSetColor( d.color );
 		video.draw( 0, 0 );
-		ofNoFill();
+		ofNoFill();	
 		for( detected_object d : detections )
 		{
 			ofSetColor( d.color );
