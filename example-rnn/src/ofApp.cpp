@@ -2,7 +2,7 @@
 
 void ofApp::setup() 
 {
-	std::string cfgfile = "cfg/rnn.cfg";
+	std::string cfgfile = "data/cfg/rnn.cfg";
 	std::string weightfile = "data/arts_arthistory_aesthetics.weights";
 	darknet.init( cfgfile, weightfile );
 }
