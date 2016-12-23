@@ -14,8 +14,14 @@ void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string 
 	load_weights( &net, weightfile.c_str() );
 	set_batch_network( &net, 1 );
 
-	options1 = read_data_cfg( datacfg.c_str() );
-	names = get_labels( option_find_str( options1, "names", nameslist.c_str() ) );
+	if( !datacfg.empty() )
+	{
+		options1 = read_data_cfg( datacfg.c_str() );
+	}
+	if( !nameslist.empty() )
+	{
+		names = get_labels( option_find_str( options1, "names", nameslist.c_str() ) );
+	}
 }
 
 std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold /*= 0.24f */ )

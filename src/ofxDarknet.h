@@ -6,6 +6,7 @@
 
 #include "ofMain.h"
 
+#include "activations.h"
 #include "avgpool_layer.h"
 #include "activation_layer.h"
 #include "option_list.h"
@@ -58,7 +59,7 @@ public:
 	ofxDarknet();
 	~ofxDarknet();
 
-	void init( std::string cfgfile, std::string weightfile, std::string datacfg = "cfg/coco.data", std::string nameslist = "data/names.list" );
+	void init( std::string cfgfile, std::string weightfile, std::string datacfg = "", std::string nameslist = "" );
 	std::vector< detected_object > yolo( ofPixels & pix, float threshold = 0.24f );
 	ofImage nightmate( ofPixels & pix, int max_layer, int range, int norm, int rounds, int iters, int octaves, float rate, float thresh );
 	std::vector< classification > classify( ofPixels & pix, int count = 5 );
