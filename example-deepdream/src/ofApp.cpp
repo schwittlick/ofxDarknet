@@ -6,7 +6,7 @@ void ofApp::setup()
 	dog.resize( 640, 480 );
 	
 	std::string cfgfile = "cfg/vgg-conv.cfg";
-	std::string weightfile = "vgg-conv.weights";
+	std::string weightfile = "data/vgg-conv.weights";
 	darknet.init( cfgfile, weightfile );
 	
 	int max_layer = 13;
