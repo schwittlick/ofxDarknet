@@ -152,7 +152,6 @@ You can train your own RNN models with darknet
 Install the dependencies for building darknet on Windows 10:
 * [Visual Studio 2015 (Community)](https://www.microsoft.com/download/details.aspx?id=48146)
 * [CUDA 8.0 64bit](https://developer.nvidia.com/cuda-downloads)
-* [OpenCV 2.4.9](https://sourceforge.net/projects/opencvlibrary/files/opencv-win/2.4.9/opencv-2.4.9.exe/download)
 
 There are some more necessary steps that don't work with the OF project generator:
 
