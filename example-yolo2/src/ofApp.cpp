@@ -8,16 +8,14 @@ void ofApp::setup()
 	std::string nameslist = "data/coco.list";
 	darknet.init( cfgfile, weightfile, datacfg, nameslist );
 
-	camWidth = 640;
-	camHeight = 480;
-
 	video.setDeviceID( 0 );
 	video.setDesiredFrameRate( 30 );
-	video.initGrabber( camWidth, camHeight );
+	video.initGrabber( 640, 480 );
 }
 
 void ofApp::update()
 {
+	ofLog() << ofGetFrameRate();
 	video.update();
 }
 

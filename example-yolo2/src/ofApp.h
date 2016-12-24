@@ -12,7 +12,5 @@ public:
 	void draw();
 
 	ofxDarknet darknet;
-	int camWidth, camHeight;
 	ofVideoGrabber video;
 };
-
