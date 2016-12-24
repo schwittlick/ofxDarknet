@@ -4,27 +4,23 @@ void ofApp::setup()
 {
 	std::string datacfg = "cfg/imagenet1k.data";
 	std::string cfgfile = "cfg/darknet.cfg";
-	std::string weightfile = "darknet.weights";
-	std::string nameslist = "data/labels.list";
+	std::string weightfile = "data/darknet.weights";
+	std::string nameslist = "data/imagenet.shortnames.list";
 	darknet.init( cfgfile, weightfile, datacfg, nameslist );
-
-	camWidth = 640;  // try to grab at this size.
-	camHeight = 480;
 
 	video.setDeviceID( 0 );
 	video.setDesiredFrameRate( 30 );
-	video.initGrabber( camWidth, camHeight );
+	video.initGrabber( 640, 480 );
 }
 
 void ofApp::update()
 {
+	ofLog() << ofGetFrameRate();
 	video.update();
 }
 
 void ofApp::draw()
 {
-	float thresh = ofMap( ofGetMouseX(), 0, ofGetWidth(), 0, 1 );
-	
 	video.draw( 0, 0 );
 
 	if( video.isFrameNew() ) {

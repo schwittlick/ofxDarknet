@@ -12,7 +12,6 @@ public:
 	void draw();
 
 	ofxDarknet darknet;
-	int camWidth, camHeight;
 	ofVideoGrabber video;
 	std::vector< classification > classifications;
 };
