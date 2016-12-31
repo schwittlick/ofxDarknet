@@ -6,7 +6,7 @@
 #include "option_list.h"
 #include "utils.h"
 
-list1 *read_data_cfg(const char *filename)
+list1 *read_data_cfg( char *filename )
 {
     FILE *file = fopen(filename, "r");
     if(file == 0) file_error(filename);

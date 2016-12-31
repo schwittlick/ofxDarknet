@@ -700,7 +700,7 @@ network parse_network_cfg(const char *filename)
     return net;
 }
 
-list1 *read_cfg(const char *filename)
+list1 *read_cfg( char *filename)
 {
     FILE *file = fopen(filename, "r");
     if(file == 0) file_error(filename);
@@ -1007,7 +1007,7 @@ void load_convolutional_weights(layer l, FILE *fp)
 }
 
 
-void load_weights_upto(network *net, const char *filename, int cutoff)
+void load_weights_upto( network *net, char *filename, int cutoff )
 {
 #ifdef GPU
     if(net->gpu_index >= 0){

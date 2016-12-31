@@ -16,6 +16,6 @@ void save_weights_upto(network net, char *filename, int cutoff);
 void save_weights_double(network net, char *filename);
 
 
-void load_weights_upto(network *net, char *filename, int cutoff);
+void load_weights_upto(network *net, char *filename, int cutoff );
 
 #endif
