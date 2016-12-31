@@ -7,10 +7,14 @@
 #include "box.h"
 #include "image.h"
 #include "demo.h"
-//#include <sys/time.h>
-#include <time.h>
-#include <winsock.h>
-#include "gettimeofday.h"
+
+#if defined(_MSC_VER)
+    #include <winsock.h>
+    #include <time.h>
+    #include "gettimeofday.h"
+#else
+    #include <sys/time.h>
+#endif
 
 #define FRAMES 3
 
