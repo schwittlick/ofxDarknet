@@ -29,13 +29,21 @@ image get_deconvolutional_filter(deconvolutional_layer layer, int i);
 
 
 
-#ifdef __cplusplus 
-extern "C" {
+// TODO Check why this is not included properly
+
+#if defined( _MSC_VER )
+	#ifdef __cplusplus
+	extern "C" {
+	#endif
 #endif
-	int deconvolutional_out_height( deconvolutional_layer layer );
-	int deconvolutional_out_width( deconvolutional_layer layer );
-#ifdef __cplusplus 
-}
+
+int deconvolutional_out_height( deconvolutional_layer layer );
+int deconvolutional_out_width( deconvolutional_layer layer );
+
+#if defined( _MSC_VER )
+	#ifdef __cplusplus
+	}
+	#endif
 #endif
 
 #endif
