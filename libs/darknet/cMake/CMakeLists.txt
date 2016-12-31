@@ -87,8 +87,8 @@ message(STATUS "CUDA FOUND")
 endif()
 
 
-add_library( darknetOSX SHARED ${SRC_FILES} ${CU_SRC_FILES} ${cuda_objs})
-target_link_libraries(darknetOSX ${LIBRARIES} ${OpenCV_LIBS})              #Should be the same for all macOS
+add_library(            darknetOSX SHARED ${SRC_FILES} ${CU_SRC_FILES} ${cuda_objs})
+target_link_libraries(  darknetOSX        ${LIBRARIES} )              #Should be the same for all macOS
 
 #add_executable(darknet ${SRC_DIR}/darknet.c)
 #target_link_libraries(darknet ${LIBRARIES} darknetOSX)
