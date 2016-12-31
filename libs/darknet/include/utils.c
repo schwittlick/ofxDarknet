@@ -5,7 +5,9 @@
 #include <string.h>
 #include <math.h>
 #include <assert.h>
-#include "unistd.h"
+#if defined(_MSC_VER)
+    #include "unistd.h"
+#endif
 #include <float.h>
 #include <limits.h>
 
