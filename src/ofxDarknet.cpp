@@ -85,23 +85,23 @@ std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold
 	return detections;
 }
 
-//ofImage ofxDarknet::nightmate( ofPixels & pix, int max_layer, int range, int norm, int rounds, int iters, int octaves, float rate, float thresh )
-//{
-//	image im = convert( pix );
-//
-//	for( int e = 0; e < rounds; ++e ) {
-//		fprintf( stderr, "Iteration: " );
-//		fflush( stderr );
-//		for( int n = 0; n < iters; ++n ) {
-//			fprintf( stderr, "%d, ", n );
-//			fflush( stderr );
-//			int layer = max_layer + rand() % range - range / 2;
-//			int octave = rand() % octaves;
-//			optimize_picture( &net, im, layer, 1 / pow( 1.33333333, octave ), rate, thresh, norm );
-//		}
-//	}
-//	return ofImage( convert( im ) );
-//}
+ofImage ofxDarknet::nightmate( ofPixels & pix, int max_layer, int range, int norm, int rounds, int iters, int octaves, float rate, float thresh )
+{
+	image im = convert( pix );
+
+	for( int e = 0; e < rounds; ++e ) {
+		fprintf( stderr, "Iteration: " );
+		fflush( stderr );
+		for( int n = 0; n < iters; ++n ) {
+			fprintf( stderr, "%d, ", n );
+			fflush( stderr );
+			int layer = max_layer + rand() % range - range / 2;
+			int octave = rand() % octaves;
+			optimize_picture( &net, im, layer, 1 / pow( 1.33333333, octave ), rate, thresh, norm );
+		}
+	}
+	return ofImage( convert( im ) );
+}
 
 std::vector< classification > ofxDarknet::classify( ofPixels & pix, int count )
 {
@@ -128,129 +128,129 @@ std::vector< classification > ofxDarknet::classify( ofPixels & pix, int count )
 	return classifications;
 }
 
-//std::string ofxDarknet::rnn(int num, std::string seed, float temp )
-//{
-//	int inputs = get_network_input_size( net );
-//
-//	for( int i = 0; i < net.n; ++i )
-//	{
-//		net.layers[ i ].temperature = temp;
-//	}
-//
-//	int c = 0;
-//	int len = seed.length();
-//	float *input = ( float* ) calloc( inputs, sizeof( float ) );
-//
-//	std::string sampled_text;
-//
-//	for( int i = 0; i < len - 1; ++i ) {
-//		c = seed[ i ];
-//		input[ c ] = 1;
-//		network_predict( net, input );
-//		input[ c ] = 0;
-//		
-//		char _c = c;
-//		sampled_text += _c;
-//		
-//	}
-//	if( len ) c = seed[ len - 1 ];
-//	
-//	char _c = c;
-//	sampled_text += _c;
-//	
-//	for( int i = 0; i < num; ++i ) {
-//		input[ c ] = 1;
-//		float *out = network_predict( net, input );
-//		input[ c ] = 0;
-//		for( int j = 0; j < inputs; ++j ) {
-//			if( out[ j ] < .0001 ) out[ j ] = 0;
-//		}
-//		c = sample_array( out, inputs );
-//		
-//		char _c = c;
-//		sampled_text += _c;
-//	}
-//
-//	delete input;
-//
-//	return sampled_text;
-//}
-//
-//void ofxDarknet::train_rnn( std::string textfile, std::string cfgfile )
-//{
-//	srand( time( 0 ) );
-//	unsigned char *text = 0;
-//	int *tokens = 0;
-//	size_t size;
-//	FILE *fp = fopen( textfile.c_str(), "rb" );
-//
-//	fseek( fp, 0, SEEK_END );
-//	size = ftell( fp );
-//	fseek( fp, 0, SEEK_SET );
-//
-//	text = ( unsigned char* ) calloc( size + 1, sizeof( char ) );
-//	fread( text, 1, size, fp );
-//	fclose( fp );
-//
-//	//char *backup_directory = "/home/pjreddie/backup/";
-//	char *base = basecfg( cfgfile.c_str() );
-//	fprintf( stderr, "%s\n", base );
-//	float avg_loss = -1;
-//	network net = parse_network_cfg( cfgfile.c_str() );
-//
-//	int inputs = get_network_input_size( net );
-//	fprintf( stderr, "Learning Rate: %g, Momentum: %g, Decay: %g\n", net.learning_rate, net.momentum, net.decay );
-//	int batch = net.batch;
-//	int steps = net.time_steps;
-//	int i = ( *net.seen ) / net.batch;
-//
-//	int streams = batch / steps;
-//	size_t *offsets = ( size_t* ) calloc( streams, sizeof( size_t ) );
-//	int j;
-//	for( j = 0; j < streams; ++j ) {
-//		offsets[ j ] = rand_size_t() % size;
-//	}
-//
-//	clock_t time;
-//	while( get_current_batch( net ) < net.max_batches ) {
-//		i += 1;
-//		time = clock();
-//		float_pair p;
-//		p = get_rnn_data( text, offsets, inputs, size, streams, steps );
-//
-//		float loss = train_network_datum( net, p.x, p.y ) / ( batch );
-//		free( p.x );
-//		free( p.y );
-//		if( avg_loss < 0 ) avg_loss = loss;
-//		avg_loss = avg_loss*.9 + loss*.1;
-//
-//		int chars = get_current_batch( net )*batch;
-//		fprintf( stderr, "%d: %f, %f avg, %f rate, %lf seconds, %f epochs\n", i, loss, avg_loss, get_current_rate( net ), sec( clock() - time ), ( float ) chars / size );
-//
-//		for( j = 0; j < streams; ++j ) {
-//			//printf("%d\n", j);
-//			if( rand() % 10 == 0 ) {
-//				//fprintf(stderr, "Reset\n");
-//				offsets[ j ] = rand_size_t() % size;
-//				reset_rnn_state( net, j );
-//			}
-//		}
-//
-//		if( i % 1000 == 0 ) {
-//			char buff[ 256 ];
-//			sprintf( buff, "%s_%d.weights", base, i );
-//			save_weights( net, buff );
-//		}
-//		if( i % 10 == 0 ) {
-//			char buff[ 256 ];
-//			sprintf( buff, "%s.backup", base );
-//			save_weights( net, buff );
-//		}
-//	}
-//	char buff[ 256 ];
-//	sprintf( buff, "%s_final.weights", base );
-//	save_weights( net, buff );
-//}
+std::string ofxDarknet::rnn(int num, std::string seed, float temp )
+{
+	int inputs = get_network_input_size( net );
+
+	for( int i = 0; i < net.n; ++i )
+	{
+		net.layers[ i ].temperature = temp;
+	}
+
+	int c = 0;
+	int len = seed.length();
+	float *input = ( float* ) calloc( inputs, sizeof( float ) );
+
+	std::string sampled_text;
+
+	for( int i = 0; i < len - 1; ++i ) {
+		c = seed[ i ];
+		input[ c ] = 1;
+		network_predict( net, input );
+		input[ c ] = 0;
+		
+		char _c = c;
+		sampled_text += _c;
+		
+	}
+	if( len ) c = seed[ len - 1 ];
+	
+	char _c = c;
+	sampled_text += _c;
+	
+	for( int i = 0; i < num; ++i ) {
+		input[ c ] = 1;
+		float *out = network_predict( net, input );
+		input[ c ] = 0;
+		for( int j = 0; j < inputs; ++j ) {
+			if( out[ j ] < .0001 ) out[ j ] = 0;
+		}
+		c = sample_array( out, inputs );
+		
+		char _c = c;
+		sampled_text += _c;
+	}
+
+	delete input;
+
+	return sampled_text;
+}
+
+void ofxDarknet::train_rnn( std::string textfile, std::string cfgfile )
+{
+	srand( time( 0 ) );
+	unsigned char *text = 0;
+	int *tokens = 0;
+	size_t size;
+	FILE *fp = fopen( textfile.c_str(), "rb" );
+
+	fseek( fp, 0, SEEK_END );
+	size = ftell( fp );
+	fseek( fp, 0, SEEK_SET );
+
+	text = ( unsigned char* ) calloc( size + 1, sizeof( char ) );
+	fread( text, 1, size, fp );
+	fclose( fp );
+
+	//char *backup_directory = "/home/pjreddie/backup/";
+	char *base = basecfg( cfgfile.c_str() );
+	fprintf( stderr, "%s\n", base );
+	float avg_loss = -1;
+	network net = parse_network_cfg( cfgfile.c_str() );
+
+	int inputs = get_network_input_size( net );
+	fprintf( stderr, "Learning Rate: %g, Momentum: %g, Decay: %g\n", net.learning_rate, net.momentum, net.decay );
+	int batch = net.batch;
+	int steps = net.time_steps;
+	int i = ( *net.seen ) / net.batch;
+
+	int streams = batch / steps;
+	size_t *offsets = ( size_t* ) calloc( streams, sizeof( size_t ) );
+	int j;
+	for( j = 0; j < streams; ++j ) {
+		offsets[ j ] = rand_size_t() % size;
+	}
+
+	clock_t time;
+	while( get_current_batch( net ) < net.max_batches ) {
+		i += 1;
+		time = clock();
+		float_pair p;
+		p = get_rnn_data( text, offsets, inputs, size, streams, steps );
+
+		float loss = train_network_datum( net, p.x, p.y ) / ( batch );
+		free( p.x );
+		free( p.y );
+		if( avg_loss < 0 ) avg_loss = loss;
+		avg_loss = avg_loss*.9 + loss*.1;
+
+		int chars = get_current_batch( net )*batch;
+		fprintf( stderr, "%d: %f, %f avg, %f rate, %lf seconds, %f epochs\n", i, loss, avg_loss, get_current_rate( net ), sec( clock() - time ), ( float ) chars / size );
+
+		for( j = 0; j < streams; ++j ) {
+			//printf("%d\n", j);
+			if( rand() % 10 == 0 ) {
+				//fprintf(stderr, "Reset\n");
+				offsets[ j ] = rand_size_t() % size;
+				reset_rnn_state( net, j );
+			}
+		}
+
+		if( i % 1000 == 0 ) {
+			char buff[ 256 ];
+			sprintf( buff, "%s_%d.weights", base, i );
+			save_weights( net, buff );
+		}
+		if( i % 10 == 0 ) {
+			char buff[ 256 ];
+			sprintf( buff, "%s.backup", base );
+			save_weights( net, buff );
+		}
+	}
+	char buff[ 256 ];
+	sprintf( buff, "%s_final.weights", base );
+	save_weights( net, buff );
+}
 
 image ofxDarknet::convert( ofPixels & pix )
 {
