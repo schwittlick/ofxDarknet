@@ -88,22 +88,22 @@ endif()
 
 
 # --------------------------
+if( APPLE )
+    set( LIB_NAME           darknetOSX )
+    set( LIB_PATH_INSTALL  ${PROJECT_SOURCE_DIR}/../lib/osx/ )
+endif()
 
-set( LIB_NAME           darknetOSX )
-set( LIB_PATH_INSTALL  ${PROJECT_SOURCE_DIR}/../lib/osx/ )
 
-
-add_library(            darknetOSX SHARED ${SRC_FILES} ${CU_SRC_FILES} ${cuda_objs})
-target_link_libraries(  darknetOSX        ${LIBRARIES} )              #Should be the same for all macOS
+add_library(            ${LIB_NAME} SHARED ${SRC_FILES} ${CU_SRC_FILES} ${cuda_objs})
+target_link_libraries(  ${LIB_NAME}        ${LIBRARIES} )              #Should be the same for all macOS
 
 #add_executable(darknet ${SRC_DIR}/darknet.c)
-#target_link_libraries(darknet ${LIBRARIES} darknetOSX)
-#target_link_libraries(darknet darknetOSX)
-
+#target_link_libraries(darknet ${LIBRARIES} ${LIB_NAME})
+#target_link_libraries(darknet ${LIB_NAME})
 
 
 set( LIB_PATH  ${LIB_PATH_INSTALL} )
-set_target_properties(  darknetOSX
+set_target_properties(  ${LIB_NAME}
         PROPERTIES
         LIBRARY_OUTPUT_DIRECTORY    ${LIB_PATH}
         ARCHIVE_OUTPUT_DIRECTORY    ${LIB_PATH}
