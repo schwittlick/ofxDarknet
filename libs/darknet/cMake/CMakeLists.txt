@@ -40,8 +40,8 @@ else()
 endif()
 
 #BOOST
-FIND_PACKAGE(Boost REQUIRED python)
-FIND_PACKAGE(PythonLibs REQUIRED)
+#FIND_PACKAGE(Boost REQUIRED python)
+#FIND_PACKAGE(PythonLibs REQUIRED)
 #FIND_PACKAGE(OpenCV) #TODO OpenCV turned off
 
 if(OpenCV_FOUND)
@@ -54,20 +54,22 @@ include_directories(SYSTEM ${OpenCV_INCLUDE_DIR})
 
 
 # ------- INCLUDES ---------
-include_directories(src)
-set(SRC_DIR ../include)
+set( SRC_DIR ${PROJECT_SOURCE_DIR}/../include )
+include_directories( ${SRC_DIR} )
 
-FILE(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/${SRC_DIR}/*.c)
-LIST(REMOVE_ITEM SRC_FILES "${PROJECT_SOURCE_DIR}/SRC_DIR/server.c")
-LIST(REMOVE_ITEM SRC_FILES "${PROJECT_SOURCE_DIR}/SRC_DIR/old.c")
-LIST(REMOVE_ITEM SRC_FILES "${PROJECT_SOURCE_DIR}/SRC_DIR/cpu_gemm.c")
-#LIST(REMOVE_ITEM SRC_FILES "${PROJECT_SOURCE_DIR}/src/darknet.c")
+
+FILE(GLOB SRC_FILES         ${SRC_DIR}/*.c)
+LIST(REMOVE_ITEM SRC_FILES "${SRC_DIR}/server.c")
+LIST(REMOVE_ITEM SRC_FILES "${SRC_DIR}/old.c")
+LIST(REMOVE_ITEM SRC_FILES "${SRC_DIR}/cpu_gemm.c")
+LIST(REMOVE_ITEM SRC_FILES "${SRC_DIR}/darknet.c")
 
 if (CUDA_FOUND)
 
-FILE(GLOB CU_SRC_FILES ${PROJECT_SOURCE_DIR}/${SRC_DIR}/*.cu)
+FILE(GLOB CU_SRC_FILES ${SRC_DIR}/*.cu)
     
-CUDA_INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/src)       #TODO Is this right?
+#CUDA_INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/src)       #TODO Is this right?
+CUDA_INCLUDE_DIRECTORIES( ${SRC_DIR}/src)       #TODO Is this right?
 
 set(CUDA_ARCH_BIN "20 30 32 35 37 50 52" CACHE STRING "Specify 'real' GPU arch to build binaries for, BIN(PTX) format is supported. Example: 1.3 2.1(1.3) or 13 21(13)")
 set(CUDA_ARCH_PTX "" CACHE STRING "Specify 'virtual' PTX arch to build PTX intermediate code for. Example: 1.0 1.2 or 10 12")              
