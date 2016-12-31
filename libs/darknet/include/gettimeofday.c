@@ -1,3 +1,5 @@
+#if defined(_MSC_VER)
+
 #include "gettimeofday.h"
  
 int gettimeofday(struct timeval *tv, struct timezone *tz)
@@ -47,3 +49,5 @@ int timersub(struct timeval *a, struct timeval *b, struct timeval *result)
 
     return 0;
 }
+
+#endif
