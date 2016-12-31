@@ -87,6 +87,12 @@ message(STATUS "CUDA FOUND")
 endif()
 
 
+# --------------------------
+
+set( LIB_NAME           darknetOSX )
+set( LIB_PATH_INSTALL  ${PROJECT_SOURCE_DIR}/../lib/osx/ )
+
+
 add_library(            darknetOSX SHARED ${SRC_FILES} ${CU_SRC_FILES} ${cuda_objs})
 target_link_libraries(  darknetOSX        ${LIBRARIES} )              #Should be the same for all macOS
 
@@ -95,12 +101,10 @@ target_link_libraries(  darknetOSX        ${LIBRARIES} )              #Should be
 #target_link_libraries(darknet darknetOSX)
 
 
-# --------------------------
-# TODO Static Hack
-#set( LIB_PATH  ${PROJECT_SOURCE_DIR}/../lib/osx/ )
-#set_target_properties(  darknetOSX
-#        PROPERTIES
-#        LIBRARY_OUTPUT_DIRECTORY    ${LIB_PATH}
-#        ARCHIVE_OUTPUT_DIRECTORY    ${LIB_PATH}
-#        )
-# --------------------------
+
+set( LIB_PATH  ${LIB_PATH_INSTALL} )
+set_target_properties(  darknetOSX
+        PROPERTIES
+        LIBRARY_OUTPUT_DIRECTORY    ${LIB_PATH}
+        ARCHIVE_OUTPUT_DIRECTORY    ${LIB_PATH}
+        )
