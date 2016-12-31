@@ -44,19 +44,18 @@ endif()
 #FIND_PACKAGE(PythonLibs REQUIRED)
 #FIND_PACKAGE(OpenCV) #TODO OpenCV turned off
 
-if(OpenCV_FOUND)
-    add_definitions(-DOPENCV)
-endif()
+#if(OpenCV_FOUND)
+#    add_definitions(-DOPENCV)
+#endif()
 
-include_directories(SYSTEM ${Boost_INCLUDE_DIR})
-include_directories(SYSTEM ${PYTHON_INCLUDE_DIR})
-include_directories(SYSTEM ${OpenCV_INCLUDE_DIR})
+#include_directories(SYSTEM ${Boost_INCLUDE_DIR})
+#include_directories(SYSTEM ${PYTHON_INCLUDE_DIR})
+#include_directories(SYSTEM ${OpenCV_INCLUDE_DIR})
 
 
 # ------- INCLUDES ---------
 set( SRC_DIR ${PROJECT_SOURCE_DIR}/../include )
 include_directories( ${SRC_DIR} )
-
 
 FILE(GLOB SRC_FILES         ${SRC_DIR}/*.c)
 LIST(REMOVE_ITEM SRC_FILES "${SRC_DIR}/server.c")
