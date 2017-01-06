@@ -73,9 +73,16 @@ endif()
 
 
 # --------------------------
+set( LIB_TYPE "SHARED" )
+
 if( APPLE )
+    message( STATUS "Building ${LIB_TYPE} for APPLE" )
     set( LIB_NAME           darknetOSX )
     set( LIB_PATH_INSTALL  ${PROJECT_SOURCE_DIR}/../lib/osx/ )
+elseif( LINUX )
+    message( STATUS "Building ${LIB_TYPE} for LINUX" )
+    set( LIB_NAME           darknetLinux )
+    set( LIB_PATH_INSTALL  ${PROJECT_SOURCE_DIR}/../lib/linux/ )
 endif()
 
 
