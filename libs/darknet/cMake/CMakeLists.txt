@@ -74,6 +74,7 @@ endif()
 
 # --------------------------
 set( LIB_TYPE "SHARED" )
+#set( LIB_TYPE "STATIC" )
 
 if( APPLE )
     message( STATUS "Building ${LIB_TYPE} for APPLE" )
@@ -86,12 +87,8 @@ elseif( LINUX )
 endif()
 
 
-add_library(            ${LIB_NAME} SHARED ${SRC_FILES} ${CU_SRC_FILES} ${cuda_objs})
+add_library(            ${LIB_NAME} ${LIB_TYPE} ${SRC_FILES} ${CU_SRC_FILES} ${cuda_objs})
 target_link_libraries(  ${LIB_NAME}        ${LIBRARIES} )
-
-#add_executable(darknet ${SRC_DIR}/darknet.c)
-#target_link_libraries(darknet ${LIBRARIES} ${LIB_NAME})
-#target_link_libraries(darknet ${LIB_NAME})
 
 
 set( LIB_PATH  ${LIB_PATH_INSTALL} )
@@ -100,3 +97,7 @@ set_target_properties(  ${LIB_NAME}
         LIBRARY_OUTPUT_DIRECTORY    ${LIB_PATH}
         ARCHIVE_OUTPUT_DIRECTORY    ${LIB_PATH}
         )
+
+#add_executable(darknet ${SRC_DIR}/darknet.c)
+#target_link_libraries(darknet ${LIBRARIES} ${LIB_NAME})
+#target_link_libraries(darknet ${LIB_NAME})
