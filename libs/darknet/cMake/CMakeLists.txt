@@ -72,7 +72,7 @@ message(STATUS "CUDA FOUND")
 endif()
 
 
-# --------------------------
+# -------- LIBRARY CREATION ---------
 set( LIB_TYPE "SHARED" )
 #set( LIB_TYPE "STATIC" )
 
@@ -98,6 +98,7 @@ set_target_properties(  ${LIB_NAME}
         ARCHIVE_OUTPUT_DIRECTORY    ${LIB_PATH}
         )
 
+# -------- EXECUTABLE CREATION (NOT OPENFRAMEWORKS) ---------
 #add_executable(darknet ${SRC_DIR}/darknet.c)
 #target_link_libraries(darknet ${LIBRARIES} ${LIB_NAME})
 #target_link_libraries(darknet ${LIB_NAME})
