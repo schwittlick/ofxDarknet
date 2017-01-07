@@ -2,15 +2,15 @@
 
 void ofApp::setup() 
 {
-    video.initGrabber( 640, 480 );
-    
-    string datacfg = "/Users/gene/Learn/darknet_static/cfg/COCO_COPY_TEMP.data";
-    string cfgfile = "/Users/gene/Learn/darknet/cfg/yolo.cfg";
-    string weightfile = "/Users/gene/Learn/darknet_static/yolo.weights";
-    string filename = "/Users/gene/Learn/darknet/data/dog.jpg";
-    string nameslist = "/Users/gene/Learn/darknet/data/coco.list";
-    
-    darknet.init( cfgfile, weightfile, datacfg, nameslist );
+	std::string datacfg = "cfg/coco.data";
+	std::string cfgfile = "cfg/yolo.cfg";
+	std::string weightfile = "data/yolo.weights";
+	std::string nameslist = "data/coco.list";
+	darknet.init( cfgfile, weightfile, datacfg, nameslist );
+
+	video.setDeviceID( 0 );
+	video.setDesiredFrameRate( 30 );
+	video.initGrabber( 640, 480 );
 }
 
 void ofApp::update()
