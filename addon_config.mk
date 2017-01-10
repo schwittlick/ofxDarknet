@@ -32,7 +32,7 @@ common:
 	ADDON_INCLUDES = libs
 	ADDON_INCLUDES += src
 	ADDON_INCLUDES += /usr/local/cuda/include
-	
+
 	# any special flag that should be passed to the compiler when using this
 	# addon
 	# ADDON_CFLAGS =
@@ -102,7 +102,7 @@ common:
 	ADDON_SOURCES += libs/darknet/include/tree.h
 	ADDON_SOURCES += libs/darknet/include/unistd.h
 	ADDON_SOURCES += libs/darknet/include/utils.h
-
+	
 	# some addons need resources to be copied to the bin/data folder of the project
 	# specify here any files that need to be copied, you can use wildcards like * and ?
 	# ADDON_DATA = 
