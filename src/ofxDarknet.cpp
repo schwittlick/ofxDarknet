@@ -9,7 +9,8 @@ ofxDarknet::~ofxDarknet()
 }
 
 void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string datacfg, std::string nameslist )
-{	
+{
+    cuda_set_device(0);
 	net = parse_network_cfg( cfgfile.c_str() );
 	load_weights( &net, weightfile.c_str() );
 	set_batch_network( &net, 1 );

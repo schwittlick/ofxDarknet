@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define GPU
+
 #include "ofMain.h"
 
 #include "activations.h"
