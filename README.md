@@ -165,7 +165,7 @@ There are some more necessary steps that don't work with the OF project generato
 
 First make sure you have [CUDA 8.0 64bit](https://developer.nvidia.com/cuda-downloads) (Driver & Toolkit). CUDA requires an NVIDIA graphics card and a reasonably recent Mac OS. 
 
-After that, ofxDarknet should compile fine from the Project Generator. In order to properly link the dynamic library, `libdarknetOSX.dylib`, at the moment you need to place a copy of it next to the app itself (we will fix this soon), otherwise you'll get a [linker error](https://github.com/mrzl/ofxDarknet/issues/3).
+After that, ofxDarknet should compile fine from the Project Generator. In order to properly link the dynamic library, `ofxDarknet/libs/darknet/lib/osx/libdarknetOSX.dylib`, at the moment you need to place a copy of it next to the app itself (we will fix this soon), otherwise you'll get a [linker error](https://github.com/mrzl/ofxDarknet/issues/3).
 
 ## Training your own models
 
