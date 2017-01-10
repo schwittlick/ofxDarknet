@@ -120,7 +120,7 @@ Darknet pre-trained weights files:
 ofxDarknet custom pre-trained weight files (each trained for 20h on NVidia TitanX):
 * [Anonymous - Hypersphere](http://mrzl.net/ofxdarknet/anonymous-hypersphere.weights)
 Hypersphere, written by Anonymous with the help of the 4chan board /lit/ (of The Legacy of Totalitarianism in a Tundra fame) is an epic tale spanning over 700 pages.
-A postmodern collaborative writing effort containing Slavoj éiûek erotica, top secret Donald Trump emails, poetry, repair instructions for future cars, a history of bottles in the Ottoman empire; actually, it contains everything since it takes place in the Hypersphere, and the Hypersphere is a big place; really big in fact.
+A postmodern collaborative writing effort containing Slavoj ≈Ωi≈æek erotica, top secret Donald Trump emails, poetry, repair instructions for future cars, a history of bottles in the Ottoman empire; actually, it contains everything since it takes place in the Hypersphere, and the Hypersphere is a big place; really big in fact.
 * [Books on art history & aesthetics](http://mrzl.net/ofxdarknet/arts_arthistory_aesthetics.weights)
 * [Books on digital culture](http://mrzl.net/ofxdarknet/digital_and_internet_theory.weights)
 
@@ -163,7 +163,7 @@ There are some more necessary steps that don't work with the OF project generato
 
 ### OSX
 
-First make sure you have [CUDA 8.0 64bit](https://developer.nvidia.com/cuda-downloads). CUDA requires an NVIDIA graphics card and a reasonably recent Mac OS. 
+First make sure you have [CUDA 8.0 64bit](https://developer.nvidia.com/cuda-downloads) (Driver & Toolkit). CUDA requires an NVIDIA graphics card and a reasonably recent Mac OS. 
 
 After that, ofxDarknet should compile fine from the Project Generator. In order to properly link the dynamic library, `libdarknetOSX.dylib`, at the moment you need to place a copy of it next to the app itself (we will fix this soon), otherwise you'll get a [linker error](https://github.com/mrzl/ofxDarknet/issues/3).
 
