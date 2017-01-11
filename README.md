@@ -157,15 +157,12 @@ There are some more necessary steps that don't work with the OF project generato
 
 * Compile as Debug or Release in x64 mode
 * Within VS2015 Solution Explorer, rightclick on the generated project -> Build Dependencies -> Build Customizations -> Tick CUDA 8.0
-* C/C++ -> Preprocessor -> Preprocessor Definitions > GPU;%(PreprocessorDefinitions)
 * C/C++ -> All Options -> Compile As -> Default
 * Copy pthreadVC2.dll from ofxDarknet\libs\3rdparty\dll\x64 to your applications bin folder
 
 ### OSX
 
-First make sure you have [CUDA 8.0 64bit](https://developer.nvidia.com/cuda-downloads). CUDA requires an NVIDIA graphics card and a reasonably recent Mac OS. 
-
-After that, ofxDarknet should compile fine from the Project Generator. In order to properly link the dynamic library, `libdarknetOSX.dylib`, at the moment you need to place a copy of it next to the app itself (we will fix this soon), otherwise you'll get a [linker error](https://github.com/mrzl/ofxDarknet/issues/3).
+An OSX version is on the way and will be updated here..
 
 ## Training your own models
 
