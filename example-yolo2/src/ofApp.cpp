@@ -2,10 +2,10 @@
 
 void ofApp::setup() 
 {
-	std::string datacfg = "cfg/coco.data";
-	std::string cfgfile = "cfg/yolo.cfg";
-	std::string weightfile = "data/yolo.weights";
-	std::string nameslist = "data/coco.list";
+	std::string datacfg = ofToDataPath( "cfg/coco.data" );
+	std::string cfgfile = ofToDataPath( "cfg/yolo.cfg" );
+	std::string weightfile = ofToDataPath( "yolo.weights" );
+	std::string nameslist = ofToDataPath( "cfg/coco.list" );
 	darknet.init( cfgfile, weightfile, datacfg, nameslist );
 
 	video.setDeviceID( 0 );

@@ -2,8 +2,8 @@
 
 void ofApp::setup() 
 {
-	std::string cfgfile = "data/cfg/rnn.cfg";
-	std::string weightfile = "data/arts_arthistory_aesthetics.weights";
+	std::string cfgfile = ofToDataPath( "cfg/cfg/rnn.cfg" );
+	std::string weightfile = ofToDataPath( "arts_arthistory_aesthetics.weights" );
 	darknet.init( cfgfile, weightfile );
 }
 

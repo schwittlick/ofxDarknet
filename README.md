@@ -15,10 +15,10 @@ MS COCO dataset (80 different classes)
 * tiny-yolo.cfg & [tiny-yolo.weights](http://pjreddie.com/media/files/tiny-yolo.weights) (60 MB COCO-model)
 
 ```
-	std::string datacfg = "cfg/coco.data";
-	std::string cfgfile = "cfg/tiny-yolo.cfg";
-	std::string weightfile = "data/tiny-yolo.weights";
-	std::string nameslist = "data/names.list";
+	std::string datacfg = ofToDataPath( "cfg/coco.data" );
+	std::string cfgfile = ofToDataPath( "cfg/tiny-yolo.cfg" );
+	std::string weightfile = ofToDataPath( "tiny-yolo.weights" );
+	std::string nameslist = ofToDataPath( "cfg/names.list" );
 	darknet.init( cfgfile, weightfile, datacfg, nameslist );
 ```
 
@@ -27,10 +27,10 @@ Pascal VOC dataset (20 different classes)
 * tiny-yolo-voc.cfg & [tiny-yolo-voc.weights](http://pjreddie.com/media/files/tiny-yolo-voc.weights) (60 MB VOC-model)
 
 ```
-	std::string datacfg = "cfg/voc.data";
-	std::string cfgfile = "cfg/tiny-yolo-voc.cfg";
-	std::string weightfile = "data/tiny-yolo-voc.weights";
-	std::string nameslist = "data/voc.names";
+	std::string datacfg = ofToDataPath( "cfg/voc.data" );
+	std::string cfgfile = ofToDataPath( "cfg/tiny-yolo-voc.cfg" );
+	std::string weightfile = ofToDataPath( "tiny-yolo-voc.weights" );
+	std::string nameslist = ofToDataPath( "cfg/voc.names" );
 	darknet.init( cfgfile, weightfile, datacfg, nameslist );
 ```
 
@@ -55,23 +55,23 @@ Pascal VOC dataset (20 different classes)
 In order to classify an image with more classes, this is the spot. This classifies an image according to the 1000-class [ImageNet Challenge](http://image-net.org/challenges/LSVRC/2015/index).
 
 * [AlexNet](http://pjreddie.com/darknet/imagenet/#alexnet)
-cfg: [alexnet.cfg](https://github.com/mrzl/ofxDarknet/blob/master/example-imagenet/src/cfg/alexnet.cfg) weights: [alexnet.weights](http://pjreddie.com/media/files/alexnet.weights)
+cfg: [alexnet.cfg](https://github.com/mrzl/ofxDarknet/blob/master/example-imagenet/bin/data/cfg/alexnet.cfg) weights: [alexnet.weights](http://pjreddie.com/media/files/alexnet.weights)
 * [Darknet Reference](http://pjreddie.com/darknet/imagenet/#reference)
-cfg: [darknet.cfg](https://github.com/mrzl/ofxDarknet/blob/master/example-imagenet/src/cfg/darknet.cfg) weights: [darknet.cfg](http://pjreddie.com/media/files/darknet.weights)
+cfg: [darknet.cfg](https://github.com/mrzl/ofxDarknet/blob/master/example-imagenet/bin/data/cfg/darknet.cfg) weights: [darknet.cfg](http://pjreddie.com/media/files/darknet.weights)
 * [VGG-16](http://pjreddie.com/darknet/imagenet/#vgg)
-cfg: [vgg-16.cfg](https://github.com/mrzl/ofxDarknet/blob/master/example-imagenet/src/cfg/vgg-16.cfg) weights: [vgg-16.weights](http://pjreddie.com/media/files/vgg-16.weights)
+cfg: [vgg-16.cfg](https://github.com/mrzl/ofxDarknet/blob/master/example-imagenet/bin/data/cfg/vgg-16.cfg) weights: [vgg-16.weights](http://pjreddie.com/media/files/vgg-16.weights)
 * [Extraction](http://pjreddie.com/darknet/imagenet/#extraction)
-cfg: [extraction.cfg](https://github.com/mrzl/ofxDarknet/blob/master/example-imagenet/src/cfg/extraction.cfg) weights: [extraction.weights](http://pjreddie.com/media/files/extraction.weights)
+cfg: [extraction.cfg](https://github.com/mrzl/ofxDarknet/blob/master/example-imagenet/bin/data/cfg/extraction.cfg) weights: [extraction.weights](http://pjreddie.com/media/files/extraction.weights)
 * [Darknet19](http://pjreddie.com/darknet/imagenet/#darknet19)
-cfg: [darknet16.cfg](https://github.com/mrzl/ofxDarknet/blob/master/example-imagenet/src/cfg/darknet19.cfg) weights: [darknet19.weights](http://pjreddie.com/media/files/darknet19.weights)
+cfg: [darknet16.cfg](https://github.com/mrzl/ofxDarknet/blob/master/example-imagenet/bin/data/cfg/darknet19.cfg) weights: [darknet19.weights](http://pjreddie.com/media/files/darknet19.weights)
 * [Darknet19 448x448](http://pjreddie.com/darknet/imagenet/#darknet19_448)
-cfg: [darknet19_488.cfg](https://github.com/mrzl/ofxDarknet/blob/master/example-imagenet/src/cfg/darknet19_448.cfg) weights: [darknet19_488.weights](http://pjreddie.com/media/files/darknet19_448.weights)
+cfg: [darknet19_488.cfg](https://github.com/mrzl/ofxDarknet/blob/master/example-imagenet/src/bin/data/cfg/darknet19_448.cfg) weights: [darknet19_488.weights](http://pjreddie.com/media/files/darknet19_448.weights)
 
 ```
-	std::string datacfg = "cfg/imagenet1k.data";
-	std::string cfgfile = "cfg/darknet.cfg";
-	std::string weightfile = "darknet.weights";
-	std::string nameslist = "data/imagenet.shortnames.list";
+	std::string datacfg = ofToDataPath( "cfg/imagenet1k.data" );
+	std::string cfgfile = ofToDataPath( "cfg/darknet.cfg" );
+	std::string weightfile = ofToDataPath( "darknet.weights" );
+	std::string nameslist = ofToDataPath( "cfg/imagenet.shortnames.list" );
 	darknet.init( cfgfile, weightfile, datacfg, nameslist );
 
 	classifications = darknet.classify( image.getPixelsRef() );
@@ -89,11 +89,11 @@ cfg: [darknet19_488.cfg](https://github.com/mrzl/ofxDarknet/blob/master/example-
 
 ### Deep Dream (http://pjreddie.com/darknet/nightmare/)
 
-[vgg-conv.cfg](https://github.com/mrzl/ofxDarknet/blob/master/example-deepdream/src/cfg/vgg-conv.cfg) & [vgg-conv.weights](http://pjreddie.com/media/files/vgg-conv.weights)
+[vgg-conv.cfg](https://github.com/mrzl/ofxDarknet/blob/master/example-deepdream/bin/data/cfg/vgg-conv.cfg) & [vgg-conv.weights](http://pjreddie.com/media/files/vgg-conv.weights)
 
 ```
-	std::string cfgfile = "cfg/vgg-conv.cfg";
-	std::string weightfile = "vgg-conv.weights";
+	std::string cfgfile = ofToDataPath( "cfg/vgg-conv.cfg" );
+	std::string weightfile = ofToDataPath( "vgg-conv.weights" );
 	darknet.init( cfgfile, weightfile );
 	
 	int max_layer = 13;
@@ -126,8 +126,8 @@ A postmodern collaborative writing effort containing Slavoj Žižek erotica, top s
 
 
 ```
-	std::string cfgfile = "cfg/rnn.cfg";
-	std::string weightfile = "data/shakespeare.weights";
+	std::string cfgfile = ofToDataPath( "cfg/rnn.cfg" );
+	std::string weightfile = ofToDataPath( "shakespeare.weights" );
 	darknet.init( cfgfile, weightfile );
 
 	int character_count = 100;
@@ -142,7 +142,7 @@ You can train your own RNN models with darknet
 
 ```
 	// no need to init
-	darknet.train_rnn( "D:\\path\\to\\text\\text.txt", "cfg/rnn.cfg" );
+	darknet.train_rnn( ofToDataPath( "training_text.txt" ), "cfg/rnn.cfg" );
 ```
 
 ## Setup

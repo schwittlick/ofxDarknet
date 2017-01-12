@@ -2,10 +2,10 @@
 
 void ofApp::setup() 
 {
-	std::string datacfg = "cfg/imagenet1k.data";
-	std::string cfgfile = "cfg/darknet.cfg";
-	std::string weightfile = "data/darknet.weights";
-	std::string nameslist = "data/imagenet.shortnames.list";
+	std::string datacfg = ofToDataPath( "cfg/imagenet1k.data" );
+	std::string cfgfile = ofToDataPath( "cfg/darknet.cfg" );
+	std::string weightfile = ofToDataPath( "darknet.weights" );
+	std::string nameslist = ofToDataPath( "cfg/imagenet.shortnames.list" );
 	darknet.init( cfgfile, weightfile, datacfg, nameslist );
 
 	video.setDeviceID( 0 );
