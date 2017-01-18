@@ -34,6 +34,17 @@ Pascal VOC dataset (20 different classes)
 	darknet.init( cfgfile, weightfile, datacfg, nameslist );
 ```
 
+YOLO2 with 9000 classes
+
+* yolo9000.cfg & [yolo9000.weights](http://pjreddie.com/media/files/yolo9000.weights) (190MB COCO-model)
+
+```
+	std::string datacfg = ofToDataPath( "cfg/combine9k.data" );
+	std::string cfgfile = ofToDataPath( "cfg/yolo9000.cfg" );
+	std::string weightfile = ofToDataPath( "yolo9000.weights" );
+	darknet.init( cfgfile, weightfile, datacfg );
+```
+
 ```
 	float thresh = 0.25;
 	std::vector< detected_object > detections = darknet.yolo( image.getPixelsRef(), thresh );
