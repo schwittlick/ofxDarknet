@@ -5,7 +5,6 @@ void ofApp::setup()
 	std::string datacfg = ofToDataPath( "cfg/combine9k.data" );
 	std::string cfgfile = ofToDataPath( "cfg/yolo9000.cfg" );
 	std::string weightfile = ofToDataPath( "yolo9000.weights" );
-	std::string nameslist = ofToDataPath( "cfg/coco.list" );
 	darknet.init( cfgfile, weightfile, datacfg );
 
 	video.setDeviceID( 0 );
@@ -15,7 +14,6 @@ void ofApp::setup()
 
 void ofApp::update()
 {
-	ofLog() << ofGetFrameRate();
 	video.update();
 }
 
@@ -29,7 +27,6 @@ void ofApp::draw()
 	if( video.isFrameNew() ) {
 		std::vector< detected_object > detections = darknet.yolo( video.getPixelsRef(), thresh );
 
-		video.draw( 0, 0 );
 		ofNoFill();	
 		for( detected_object d : detections )
 		{
