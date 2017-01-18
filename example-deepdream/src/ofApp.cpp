@@ -17,7 +17,7 @@ void ofApp::setup()
 	int octaves = 4;
 	float rate = 0.01;
 	float thresh = 1.0;
-	nightmare = darknet.nightmate( dog.getPixelsRef(), max_layer, range, norm, rounds, iters, octaves, rate, thresh );
+	nightmare = darknet.nightmare( dog.getPixels(), max_layer, range, norm, rounds, iters, octaves, rate, thresh );
 }
 
 void ofApp::update()
