@@ -19,7 +19,7 @@ void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string 
 	{
 		options1 = read_data_cfg((char *) datacfg.c_str() );
 	}
-	if( !nameslist.empty() )
+	//if( !nameslist.empty() )
 	{
 		names = get_labels( option_find_str( options1, "names", nameslist.c_str() ) );
 	}
