@@ -102,11 +102,12 @@ std::vector< classification > ofxDarknet::classify( ofPixels & pix, int count )
 {
 	int *indexes = ( int* ) calloc( count, sizeof( int ) );
 
-	if( pix.getWidth() != net.w && pix.getHeight() != net.h ) {
-		pix.resize( net.w, net.h );
+    ofPixels  pix2( pix );
+	if( pix2.getWidth() != net.w && pix2.getHeight() != net.h ) {
+		pix2.resize( net.w, net.h );
 	}
 
-	image im = convert( pix );
+	image im = convert( pix2 );
 
 	float *predictions = network_predict( net, im.data1 );
 
