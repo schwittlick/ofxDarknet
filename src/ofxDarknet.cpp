@@ -8,21 +8,15 @@ ofxDarknet::~ofxDarknet()
 {
 }
 
-void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string datacfg, std::string nameslist )
+void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string nameslist )
 {
     cuda_set_device(0);
 	net = parse_network_cfg( cfgfile.c_str() );
 	load_weights( &net, weightfile.c_str() );
 	set_batch_network( &net, 1 );
-
-	if( !datacfg.empty() )
-	{
-		options1 = read_data_cfg((char *) datacfg.c_str() );
-	}
-	//if( !nameslist.empty() )
-	{
-		names = get_labels( option_find_str( options1, "names", nameslist.c_str() ) );
-	}
+    if (!nameslist.empty()){
+        names = get_labels( (char *) nameslist.c_str() );
+    }
 }
 
 std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold /*= 0.24f */ )
@@ -86,7 +80,7 @@ std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold
 	return detections;
 }
 
-ofImage ofxDarknet::nightmate( ofPixels & pix, int max_layer, int range, int norm, int rounds, int iters, int octaves, float rate, float thresh )
+ofImage ofxDarknet::nightmare( ofPixels & pix, int max_layer, int range, int norm, int rounds, int iters, int octaves, float rate, float thresh )
 {
 	image im = convert( pix );
 
@@ -108,11 +102,12 @@ std::vector< classification > ofxDarknet::classify( ofPixels & pix, int count )
 {
 	int *indexes = ( int* ) calloc( count, sizeof( int ) );
 
-	if( pix.getWidth() != net.w && pix.getHeight() != net.h ) {
-		pix.resize( net.w, net.h );
+    ofPixels  pix2( pix );
+	if( pix2.getWidth() != net.w && pix2.getHeight() != net.h ) {
+		pix2.resize( net.w, net.h );
 	}
 
-	image im = convert( pix );
+	image im = convert( pix2 );
 
 	float *predictions = network_predict( net, im.data1 );
 

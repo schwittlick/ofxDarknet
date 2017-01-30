@@ -2,11 +2,11 @@
 
 void ofApp::setup() 
 {
-	std::string datacfg = ofToDataPath( "cfg/imagenet1k.data" );
 	std::string cfgfile = ofToDataPath( "cfg/darknet.cfg" );
 	std::string weightfile = ofToDataPath( "darknet.weights" );
 	std::string nameslist = ofToDataPath( "cfg/imagenet.shortnames.list" );
-	darknet.init( cfgfile, weightfile, datacfg, nameslist );
+
+    darknet.init( cfgfile, weightfile, nameslist );
 
 	video.setDeviceID( 0 );
 	video.setDesiredFrameRate( 30 );
@@ -24,7 +24,7 @@ void ofApp::draw()
 	video.draw( 0, 0 );
 
 	if( video.isFrameNew() ) {
-		classifications = darknet.classify( video.getPixelsRef() );
+		classifications = darknet.classify( video.getPixels() );
 	}
 	
 	int offset = 20;

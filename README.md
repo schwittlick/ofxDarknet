@@ -173,7 +173,9 @@ There are some more necessary steps that don't work with the OF project generato
 
 ### OSX
 
-An OSX version is on the way and will be updated here..
+First make sure to install [CUDA 8.0 64bit](https://developer.nvidia.com/cuda-downloads) (Driver & Toolkit). CUDA requires an NVIDIA graphics card and a reasonably recent Mac OS.
+
+After that, projects should compile fine from the Project Generator. Make sure to download the necessary weights (links can be found [here](http://pjreddie.com/darknet/yolo/) and include the required cfg files (found in the examples) in any app that opens them.
 
 ## Training your own models
 
