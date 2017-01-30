@@ -32,6 +32,7 @@
 #include "softmax_layer.h"
 #include "utils.h"
 
+
 typedef struct{
     char *type;
     list1 *options;
@@ -263,9 +264,30 @@ layer parse_region(list1 *options, size_params params)
     l.bias_match = option_find_int_quiet(options, "bias_match",0);
 
     char *tree_file = option_find_str(options, "tree", 0);
-    if (tree_file) l.softmax_tree = read_tree(tree_file);
+	if( tree_file ) { 
+
+#ifdef _WIN32
+		l.softmax_tree = read_tree( tree_file );
+#else
+		char * buffer = malloc( strlen( "../../../" ) + strlen( tree_file ) + 1 );
+		strcpy( buffer, "../../../" );
+		strcat( buffer, tree_file );
+		l.softmax_tree = read_tree( buffer );
+#endif
+		
+	}
     char *map_file = option_find_str(options, "map", 0);
-    if (map_file) l.map = read_map(map_file);
+	if( map_file ) {
+#ifdef _WIN32
+		l.map = read_map( map_file );
+#else
+		char * buffer = malloc( strlen( "../../../" ) + strlen( map_file ) + 1 );
+		strcpy( buffer, "../../../" );
+		strcat( buffer, map_file );
+		l.map = read_map( buffer );
+#endif
+		
+	}
 
     char *a = option_find_str(options, "anchors", 0);
     if(a){
