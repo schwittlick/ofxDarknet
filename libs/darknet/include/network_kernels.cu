@@ -36,7 +36,7 @@
 #include "blas.h"
 
 
-float * get_network_output_gpu_layer(network net, int i);
+float * get_network_output_layer_gpu(network net, int i);
 float * get_network_delta_gpu_layer(network net, int i);
 float * get_network_output_gpu(network net);
 
@@ -405,4 +405,3 @@ float *network_predict_gpu(network net, float *input)
     cuda_free(state.input);
     return out;
 }
-
