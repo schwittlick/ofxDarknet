@@ -177,6 +177,15 @@ First make sure to install [CUDA 8.0 64bit](https://developer.nvidia.com/cuda-do
 
 After that, projects should compile fine from the Project Generator. Make sure to download the necessary weights (links can be found [here](http://pjreddie.com/darknet/yolo/) and include the required cfg files (found in the examples) in any app that opens them.
 
+## Building the library from source
+
+If you want to make changes to the darknet lib, you can build it from source with cmake. `cd` into `libs/darknet/cMake/` and then run:
+
+    cmake .
+    make
+
+Note, you need to have CUDA and OpenCV installed on your system first.
+
 ## Training your own models
 
 ### YOLO
