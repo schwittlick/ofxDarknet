@@ -27,7 +27,6 @@
 #include "region_layer.h"
 #include "normalization_layer.h"
 #include "reorg_layer.h"
-
 #include "cost_layer.h"
 #include "softmax_layer.h"
 #include "route_layer.h"
@@ -47,6 +46,7 @@ struct detected_object {
 	ofRectangle rect;
 	std::string label;
 	float probability;
+    vector<float> features;
 	ofColor color;
 };
 
@@ -62,7 +62,7 @@ public:
 	~ofxDarknet();
 
 	void init( std::string cfgfile, std::string weightfile, std::string nameslist = "");
-	std::vector< detected_object > yolo( ofPixels & pix, float threshold = 0.24f );
+	std::vector< detected_object > yolo( ofPixels & pix, float threshold = 0.24f, float maxOverlap = 0.5f );
 	ofImage nightmare( ofPixels & pix, int max_layer, int range, int norm, int rounds, int iters, int octaves, float rate, float thresh );
 	std::vector< classification > classify( ofPixels & pix, int count = 5 );
 	std::string rnn( int num, std::string seed, float temp );

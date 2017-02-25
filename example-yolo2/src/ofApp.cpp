@@ -20,13 +20,18 @@ void ofApp::update()
 
 void ofApp::draw()
 {
+    // detected objects with confidence < threshold are omitted
 	float thresh = ofMap( ofGetMouseX(), 0, ofGetWidth(), 0, 1 );
-	
+
+    // if a detected object overlaps >maxOverlap with another detected
+    // object with a higher confidence, it gets omitted
+    float maxOverlap = 0.25;
+    
 	ofSetColor( 255 );
 	video.draw( 0, 0 );
 
 	if( video.isFrameNew() ) {
-		std::vector< detected_object > detections = darknet.yolo( video.getPixels(), thresh );
+		std::vector< detected_object > detections = darknet.yolo( video.getPixels(), thresh, maxOverlap );
 
 		ofNoFill();	
 		for( detected_object d : detections )
