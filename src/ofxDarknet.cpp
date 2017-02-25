@@ -36,7 +36,6 @@ std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold
 	network_predict( net, X );
 	get_region_boxes( l, 1, 1, threshold, probs, boxes, 0, 0 );
 	do_nms_sort( boxes, probs, l.w*l.h*l.n, l.classes, 0.4 );
-	//free_image( sized );
 	free_image( im );
 	std::vector< detected_object > detections;
 
@@ -77,6 +76,10 @@ std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold
 			detections.push_back( detection );
 		}
 	}
+    
+    free_ptrs((void**) probs, num);
+    free(boxes);
+
 	return detections;
 }
 
@@ -121,6 +124,7 @@ std::vector< classification > ofxDarknet::classify( ofPixels & pix, int count )
 		classifications.push_back( c );
 	}
 	free_image( im );
+    free(indexes);
 	return classifications;
 }
 
