@@ -41,6 +41,10 @@ void ofApp::draw()
 			ofNoFill();
 			ofDrawRectangle( d.rect );
 			ofDrawBitmapStringHighlight( d.label + ": " + ofToString(d.probability), d.rect.x, d.rect.y + 20 );
+            
+            // optionally, you can grab the 1024-length feature vector associated
+            // with each detected object
+            vector<float> & features = d.features;
 		}
 	}
 }
