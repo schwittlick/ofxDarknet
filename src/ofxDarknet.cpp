@@ -24,7 +24,12 @@ std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold
 	int originalWidth = pix.getWidth();
 	int originalHeight = pix.getHeight();
 	ofPixels  pix2( pix );
-	pix2.resize( net.w, net.h );
+    if (pix2.getImageType() != OF_IMAGE_COLOR) {
+        pix2.setImageType(OF_IMAGE_COLOR);
+    }
+    if( pix2.getWidth() != net.w && pix2.getHeight() != net.h ) {
+        pix2.resize( net.w, net.h );
+    }
 	image im = convert( pix2 );
 	layer l = net.layers[ net.n - 1 ];
 
@@ -139,6 +144,9 @@ std::vector< classification > ofxDarknet::classify( ofPixels & pix, int count )
 	int *indexes = ( int* ) calloc( count, sizeof( int ) );
 
     ofPixels  pix2( pix );
+    if (pix2.getImageType() != OF_IMAGE_COLOR) {
+        pix2.setImageType(OF_IMAGE_COLOR);
+    }
 	if( pix2.getWidth() != net.w && pix2.getHeight() != net.h ) {
 		pix2.resize( net.w, net.h );
 	}
