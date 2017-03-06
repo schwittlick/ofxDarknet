@@ -19,7 +19,7 @@ void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string 
     }
 }
 
-std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold /*= 0.24f */ )
+std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold /*= 0.24f */, float maxOverlap /*= 0.5f */ )
 {
 	int originalWidth = pix.getWidth();
 	int originalHeight = pix.getHeight();
@@ -32,51 +32,87 @@ std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold
 	float **probs = ( float** ) calloc( l.w*l.h*l.n, sizeof( float * ) );
 	for( int j = 0; j < l.w*l.h*l.n; ++j ) probs[ j ] = ( float* ) calloc( l.classes, sizeof( float * ) );
 
-	float *X = im.data1;
-	network_predict( net, X );
+	network_predict( net, im.data1 );
 	get_region_boxes( l, 1, 1, threshold, probs, boxes, 0, 0 );
 	do_nms_sort( boxes, probs, l.w*l.h*l.n, l.classes, 0.4 );
-	//free_image( sized );
 	free_image( im );
-	std::vector< detected_object > detections;
 
-	int num = l.w*l.h*l.n;
+    std::vector< detected_object > detections;
+    int num = l.w*l.h*l.n;
+    
+    int feature_layer = net.n - 2;
+    layer l1 = net.layers[ feature_layer ];
+    float * features = get_network_output_layer_gpu(net, feature_layer);
+    
+    vector<size_t> sorted(num);
+    iota(sorted.begin(), sorted.end(), 0);
+    sort(sorted.begin(), sorted.end(), [&probs, &l](int i1, int i2) {
+        return probs[i1][max_index(probs[i1], l.classes)] > probs[i2][max_index(probs[i2], l.classes)];
+    });
+    
 	for( int i = 0; i < num; ++i ) {
-		int class1 = max_index( probs[ i ], l.classes );
-		float prob = probs[ i ][ class1 ];
-		if( prob > threshold ) {
+        int idx = sorted[i];
+		int class1 = max_index( probs[ idx ], l.classes );
+		float prob = probs[ idx ][ class1 ];
 
-			int offset = class1 * 123457 % l.classes;
-			float red = get_color( 2, offset, l.classes );
-			float green = get_color( 1, offset, l.classes );
-			float blue = get_color( 0, offset, l.classes );
+        if( prob < threshold ) {
+            continue;
+        }
 
-			box b = boxes[ i ];
+        int offset = class1 * 123457 % l.classes;
+        float red = get_color( 2, offset, l.classes );
+        float green = get_color( 1, offset, l.classes );
+        float blue = get_color( 0, offset, l.classes );
 
-			int left = ( b.x - b.w / 2. )*im.w;
-			int right = ( b.x + b.w / 2. )*im.w;
-			int top = ( b.y - b.h / 2. )*im.h;
-			int bot = ( b.y + b.h / 2. )*im.h;
+        box b = boxes[ idx ];
 
-			if( left < 0 ) left = 0;
-			if( right > im.w - 1 ) right = im.w - 1;
-			if( top < 0 ) top = 0;
-			if( bot > im.h - 1 ) bot = im.h - 1;
+        int left = ( b.x - b.w / 2. )*im.w;
+        int right = ( b.x + b.w / 2. )*im.w;
+        int top = ( b.y - b.h / 2. )*im.h;
+        int bot = ( b.y + b.h / 2. )*im.h;
 
-			left = ofMap( left, 0, net.w, 0, originalWidth );
-			top = ofMap( top, 0, net.h, 0, originalHeight );
-			right = ofMap( right, 0, net.w, 0, originalWidth );
-			bot = ofMap( bot, 0, net.h, 0, originalHeight );
+        if( left < 0 ) left = 0;
+        if( right > im.w - 1 ) right = im.w - 1;
+        if( top < 0 ) top = 0;
+        if( bot > im.h - 1 ) bot = im.h - 1;
 
-			detected_object detection;
-			detection.label = names[ class1 ];
-			detection.probability = prob;
-			detection.rect = ofRectangle( left, top, right - left, bot - top );
-			detection.color = ofColor( red * 255, green * 255, blue * 255);
+        left = ofMap( left, 0, net.w, 0, originalWidth );
+        top = ofMap( top, 0, net.h, 0, originalHeight );
+        right = ofMap( right, 0, net.w, 0, originalWidth );
+        bot = ofMap( bot, 0, net.h, 0, originalHeight );
 
-			detections.push_back( detection );
-		}
-	}
+        ofRectangle rect = ofRectangle( left, top, right - left, bot - top );
+        int rect_idx = floor(idx / l.n);
+        
+        float overlap = 0.0;
+        for (auto d : detections) {
+            float left = max(rect.x, d.rect.x);
+            float right = min(rect.x+rect.width, d.rect.x+d.rect.width);
+            float bottom = min(rect.y+rect.height, d.rect.y+d.rect.height);
+            float top = max(rect.y, d.rect.y);
+            float area_intersection = max(0.0f, right-left) * max(0.0f, bottom-top);
+            overlap = max(overlap, area_intersection / (rect.getWidth() * rect.getHeight()));
+        }
+        if (overlap > maxOverlap) {
+            continue;
+        }
+
+        detected_object detection;
+        detection.label = names[ class1 ];
+        detection.probability = prob;
+        detection.rect = rect;
+        detection.color = ofColor( red * 255, green * 255, blue * 255);
+
+        for (int f=0; f<l1.c; f++) {
+            detection.features.push_back(features[rect_idx + l1.w * l1.h * f]);
+        }
+        
+        detections.push_back( detection );
+    }
+    
+    free_ptrs((void**) probs, num);
+    free(boxes);
+
 	return detections;
 }
 
@@ -121,6 +157,7 @@ std::vector< classification > ofxDarknet::classify( ofPixels & pix, int count )
 		classifications.push_back( c );
 	}
 	free_image( im );
+    free(indexes);
 	return classifications;
 }
 
