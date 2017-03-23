@@ -6,7 +6,7 @@ Darknet is an open source neural network framework written in C and CUDA. It is 
 
 ## Features
 
-### YOLO: Real-Time Object Detection aka Dense Captioning (http://pjreddie.com/darknet/yolo/)
+### YOLO: Real-Time Object Detection (http://pjreddie.com/darknet/yolo/)
 
 Darknet comes with two pre-trained models for this task. Additionally each has a smaller (and faster) but therefore less accurate version:
 
