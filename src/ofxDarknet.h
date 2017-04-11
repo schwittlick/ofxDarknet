@@ -11,6 +11,7 @@
 #include "activations.h"
 #include "avgpool_layer.h"
 #include "activation_layer.h"
+#include "convolutional_layer.h"
 #include "option_list.h"
 #include "image.h"
 #include "parser.h"
@@ -55,26 +56,47 @@ struct classification {
 	float probability;
 };
 
+struct activations {
+    std::vector<float> acts;
+    int rows;
+    int cols;
+    float min;
+    float max;
+    void getImage(ofImage & img);
+};
+
+
 class ofxDarknet
 {
 public:
+    
 	ofxDarknet();
 	~ofxDarknet();
 
 	void init( std::string cfgfile, std::string weightfile, std::string nameslist = "");
-	std::vector< detected_object > yolo( ofPixels & pix, float threshold = 0.24f, float maxOverlap = 0.5f );
-	ofImage nightmare( ofPixels & pix, int max_layer, int range, int norm, int rounds, int iters, int octaves, float rate, float thresh );
-	std::vector< classification > classify( ofPixels & pix, int count = 5 );
-	std::string rnn( int num, std::string seed, float temp );
+    bool isLoaded() {return loaded;}
+    
+    std::vector< classification > classify( ofPixels & pix, int count = 5 );
+    std::vector< detected_object > yolo( ofPixels & pix, float threshold = 0.24f, float maxOverlap = 0.5f );
+    std::vector< activations > getFeatureMaps(int idxLayer);
 
+    ofImage nightmare( ofPixels & pix, int max_layer, int range, int norm, int rounds, int iters, int octaves, float rate, float thresh );
+    std::string rnn( int num, std::string seed, float temp );
 	void train_rnn( std::string textfile, std::string cfgfile );
+    
+    network & getNetwork() {return net;}
+    vector<string> getLayerNames() {return layerNames;}
 
+    
 private:
 	list1 *options1;
 	char **names;
+    vector<string> layerNames;
 
 	network net;
 
 	image convert( ofPixels & pix );
 	ofPixels convert( image & image );
+
+    bool loaded;
 };

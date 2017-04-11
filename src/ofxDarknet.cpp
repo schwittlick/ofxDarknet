@@ -2,6 +2,7 @@
 
 ofxDarknet::ofxDarknet()
 {
+    loaded = false;
 }
 
 ofxDarknet::~ofxDarknet()
@@ -12,11 +13,49 @@ void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string 
 {
     cuda_set_device(0);
 	net = parse_network_cfg( cfgfile.c_str() );
+    
 	load_weights( &net, weightfile.c_str() );
 	set_batch_network( &net, 1 );
     if (!nameslist.empty()){
         names = get_labels( (char *) nameslist.c_str() );
     }
+    
+    // load layer names
+    int numLayerTypes = 24;
+    int counts[numLayerTypes];
+    for (int i=0; i<numLayerTypes; i++) {counts[i] = 0;}
+    for (int i=0; i<net.n; i++) {
+        LAYER_TYPE type = net.layers[i].type;
+        string layerName = "Unknown";
+        if		(type == CONVOLUTIONAL) layerName = "Conv";
+        else if (type == DECONVOLUTIONAL) layerName = "Deconv";
+        else if (type == CONNECTED) layerName = "FC";
+        else if (type == MAXPOOL) layerName = "MaxPool";
+        else if (type == SOFTMAX) layerName = "Softmax";
+        else if (type == DETECTION) layerName = "Detect";
+        else if (type == DROPOUT) layerName = "Dropout";
+        else if (type == CROP) layerName = "Crop";
+        else if (type == ROUTE) layerName = "Route";
+        else if (type == COST) layerName = "Cost";
+        else if (type == NORMALIZATION) layerName = "Normalize";
+        else if (type == AVGPOOL) layerName = "AvgPool";
+        else if (type == LOCAL) layerName = "Local";
+        else if (type == SHORTCUT) layerName = "Shortcut";
+        else if (type == ACTIVE) layerName = "Active";
+        else if (type == RNN) layerName = "RNN";
+        else if (type == GRU) layerName = "GRU";
+        else if (type == CRNN) layerName = "CRNN";
+        else if (type == BATCHNORM) layerName = "Batchnorm";
+        else if (type == NETWORK) layerName = "Network";
+        else if (type == XNOR) layerName = "XNOR";
+        else if (type == REGION) layerName = "Region";
+        else if (type == REORG) layerName = "Reorg";
+        else if (type == BLANK) layerName = "Blank";
+        layerNames.push_back(layerName+" "+ofToString(counts[type]));
+        counts[type] += 1;
+    }
+    
+    loaded = true;
 }
 
 std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold /*= 0.24f */, float maxOverlap /*= 0.5f */ )
@@ -168,6 +207,63 @@ std::vector< classification > ofxDarknet::classify( ofPixels & pix, int count )
     free(indexes);
 	return classifications;
 }
+
+std::vector< activations > ofxDarknet::getFeatureMaps(int idxLayer)  {
+    std::vector< activations > maps;
+    
+    if (idxLayer > net.n) {
+        return maps;
+    }
+    
+    float * layer = get_network_output_layer_gpu( net, idxLayer);
+    auto l = net.layers[idxLayer];
+    
+    int channels = l.out_c;
+    int rows = l.out_h;
+    int cols = l.out_w;
+    
+//    cout << "size feature maps: "<<channels<<" x "<<rows<<" x "<<cols<<endl;
+    
+    int i=0;
+    float min_ = +1e8;
+    float max_ = -1e8;
+    for (int c=0; c<channels; c++) {
+        activations map;
+        map.rows = rows;
+        map.cols = cols;
+        for(int y=0; y<rows; y++) {
+            for(int x=0; x<cols; x++) {
+                float val = layer[i];
+                map.acts.push_back(val);
+                i++;
+                if (val > max_) {
+                    max_ = val;
+                }
+                if (val < min_) {
+                    min_ = val;
+                }
+            }
+        }
+        maps.push_back(map);
+    }
+
+    for (auto & m : maps) {
+        m.min = min_;
+        m.max = max_;
+    }
+
+    return maps;
+}
+
+void activations::getImage(ofImage & img) {
+    ofPixels pix;
+    pix.allocate(rows, cols, OF_PIXELS_GRAY);
+    for (int i=0; i<rows*cols; i++) {
+        pix[i] = ofMap(acts[i], min, max, 0, 255);
+    }
+    img.setFromPixels(pix);
+}
+
 
 std::string ofxDarknet::rnn(int num, std::string seed, float temp )
 {
