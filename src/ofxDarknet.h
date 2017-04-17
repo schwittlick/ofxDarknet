@@ -99,4 +99,5 @@ private:
 	ofPixels convert( image & image );
 
     bool loaded;
+    bool labelsAvailable;
 };

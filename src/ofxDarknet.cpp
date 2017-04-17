@@ -3,6 +3,7 @@
 ofxDarknet::ofxDarknet()
 {
     loaded = false;
+    labelsAvailable = false;
 }
 
 ofxDarknet::~ofxDarknet()
@@ -11,6 +12,9 @@ ofxDarknet::~ofxDarknet()
 
 void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string nameslist )
 {
+    if (nameslist != "") {
+        labelsAvailable = true;
+    }
     cuda_set_device(0);
 	net = parse_network_cfg( cfgfile.c_str() );
     
@@ -199,7 +203,7 @@ std::vector< classification > ofxDarknet::classify( ofPixels & pix, int count )
 	for( int i = 0; i < count; ++i ) {
 		int index = indexes[ i ];
 		classification c;
-		c.label = names[ index ];
+        c.label = labelsAvailable ? names[ index ] : ofToString(index);
 		c.probability = predictions[ index ];
 		classifications.push_back( c );
 	}
