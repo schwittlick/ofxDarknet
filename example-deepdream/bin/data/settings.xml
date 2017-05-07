@@ -1,0 +1,10 @@
+<darkdream>
+	<max_layer>9</max_layer>
+	<iterations>4</iterations>
+	<octaves>6</octaves>
+	<thresh>0.85</thresh>
+	<range>3</range>
+	<norm>4</norm>
+	<rate>0.0165</rate>
+	<blendAmt>0.76</blendAmt>
+</darkdream>
