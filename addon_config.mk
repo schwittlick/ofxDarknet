@@ -54,6 +54,8 @@ common:
 	# they can be specified here
 	ADDON_SOURCES = src/ofxDarknet.cpp
 	ADDON_SOURCES += src/ofxDarknet.h
+	ADDON_SOURCES += src/ofxDarknetGo.cpp
+	ADDON_SOURCES += src/ofxDarknetGo.h
 	ADDON_SOURCES += libs/darknet/include/activation_layer.h
 	ADDON_SOURCES += libs/darknet/include/activations.h
 	ADDON_SOURCES += libs/darknet/include/avgpool_layer.h

@@ -197,3 +197,7 @@ tcb
 * Original Code: https://github.com/pjreddie/darknet
 * Help to compile on Windows: https://github.com/AlexeyAB/darknet/
 * Help to call from C++: https://github.com/prabindh/darknet
+
+## Reading
+
+ * [tutorial](https://timebutt.github.io/static/how-to-train-yolov2-to-detect-custom-objects/) on training YoloV2 to detect custom objects

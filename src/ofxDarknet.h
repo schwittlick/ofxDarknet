@@ -43,6 +43,7 @@
 #include "opencv2/highgui/highgui_c.h"
 #endif
 
+
 struct detected_object {
 	ofRectangle rect;
 	std::string label;
@@ -69,7 +70,6 @@ struct activations {
 class ofxDarknet
 {
 public:
-    
 	ofxDarknet();
 	~ofxDarknet();
 
@@ -87,17 +87,17 @@ public:
     network & getNetwork() {return net;}
     vector<string> getLayerNames() {return layerNames;}
 
+protected:
+    image convert( ofPixels & pix );
+    ofPixels convert( image & image );
     
-private:
 	list1 *options1;
 	char **names;
     vector<string> layerNames;
-
 	network net;
-
-	image convert( ofPixels & pix );
-	ofPixels convert( image & image );
-
     bool loaded;
     bool labelsAvailable;
 };
+
+
+#include "ofxDarknetGo.h"
