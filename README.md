@@ -156,6 +156,14 @@ You can train your own RNN models with darknet
 	darknet.train_rnn( ofToDataPath( "training_text.txt" ), "cfg/rnn.cfg" );
 ```
 
+### Go
+
+Darknet has a policy network for Go. Read the [original doc here](https://pjreddie.com/darknet/darkgo-go-in-darknet/).
+
+In the example `example-go` is a 2-player game where darknet gives recommendations. To play, click on the square you wish to move a piece onto. More doc on this soon.
+
+![Go](https://raw.githubusercontent.com/mrzl/ofxDarknet/master/images/go.jpg)
+
 ## Setup
 
 ### Windows

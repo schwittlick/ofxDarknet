@@ -2,24 +2,23 @@
 
 void ofApp::setup()
 {
-    string cfgfile = ofToString("cfg/go.test.cfg");
-    string weightfile = ofToString("go.weights");
+    string cfgfile = ofToDataPath("cfg/go.test.cfg");
+    string weightfile = "/Users/gene/Learn/darknet/go.weights";//ofToDataPath("go.weights");
     
     darknet.setup(cfgfile, weightfile);
-    darknet.setDrawPosition(100, 50, 600, 600);
+    darknet.setMouseActive(true);
+    darknet.setDrawPosition(50, 50, 420, 420);
 }
 
-void ofApp::update()
-{
+void ofApp::update() {
 }
 
-void ofApp::draw()
-{
+void ofApp::draw(){
     darknet.draw();
 }
 
 void ofApp::keyPressed(int key) {
     if (key== ' ') {
-        //darknet.go_next();
+        darknet.nextAuto();
     }
 }
