@@ -10,9 +10,16 @@ void ofApp::setup()
     std::string nameslist = ofToDataPath( "cfg/imagenet.shortnames.list" );
     
     darknet.init( cfgfile, weightfile, nameslist );
+
+	inputMode = 1;
     
     numClassifications = 50;
-    grab.initGrabber(640, 480);
+	if( inputMode == 0 ) {
+		grab.initGrabber( 640, 480 );
+	}
+	else {
+		pic.load( "image.jpg" );
+	}
 }
 
 void ofApp::update() {
@@ -21,7 +28,10 @@ void ofApp::update() {
         if (grab.isFrameNew()) {
             classifications = darknet.classify(grab.getPixels(), numClassifications);
         }
-    }
+	}
+	else {
+		classifications = darknet.classify( pic.getPixels(), numClassifications );
+	}
 }
 
 void ofApp::draw() {
