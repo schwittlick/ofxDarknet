@@ -14,7 +14,8 @@ void ofApp::update() {
 }
 
 void ofApp::draw(){
-    darknet.draw();
+    darknet.drawBoard();
+    darknet.drawRecommendations(500, 100);
 }
 
 void ofApp::keyPressed(int key) {

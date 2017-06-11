@@ -1,6 +1,27 @@
 #include "ofxDarknetGo.h"
 
 
+ofxDarknetGo::ofxDarknetGo() : ofxDarknet() {
+    active = -1;
+    inverted = 1;
+    noi = 1;
+    nind = 5;
+}
+
+void ofxDarknetGo::setMouseActive(bool active) {
+    if (active) {
+        ofAddListener(ofEvents().mouseMoved, this, &ofxDarknetGo::mouseMoved);
+        ofAddListener(ofEvents().mousePressed, this, &ofxDarknetGo::mousePressed);
+    }else {
+        ofRemoveListener(ofEvents().mouseMoved, this, &ofxDarknetGo::mouseMoved);
+        ofRemoveListener(ofEvents().mousePressed, this, &ofxDarknetGo::mousePressed);
+    }
+}
+
+void ofxDarknetGo::setNumRecommendations(int n) {
+    nind = n;
+}
+
 image ofxDarknetGo::make_empty_image(int w, int h, int c)
 {
     image out;
@@ -171,42 +192,45 @@ void ofxDarknetGo::getRecommendations(){
     int indexes[nind];
     int row, col;
     top_k(move, 19*19, nind, indexes);
-    print_board(board, color, indexes);
+    //print_board(board, color, indexes);
     recommendations.clear();
+    probabilities.clear();
     for(i = 0; i < nind; ++i){
         int index = indexes[i];
         recommendations.push_back(index);
+        probabilities.push_back(move[index]);
         row = index / 19;
         col = index % 19;
-        printf("%d: %c %d, %.2f%%\n", i+1, col + 'A' + 1*(col > 7 && noi), (inverted)?19 - row : row+1, move[index]*100);
+        //printf("%d: %c %d, %.2f%%\n", i+1, col + 'A' + 1*(col > 7 && noi), (inverted)?19 - row : row+1, move[index]*100);
     }
-    
-//    int index = recommendations[0];
-  //  row = index / 19;
-   // col = index % 19;
-   // move_go(row, col);
 }
 
 void ofxDarknetGo::makeMove(int row, int col) {
+    if (abs(board[row*19 + col])==1) {
+        ofLog(OF_LOG_ERROR, "Can't move there, there is already a piece there");
+        return;
+    }
     board[row*19 + col] = 1;
     flip_board(board);
     color = -color;
+    getRecommendations();
 }
 
 void ofxDarknetGo::setDrawPosition(int x, int y, int width, int height) {
     box.set(x, y, width, height);
 }
 
-void ofxDarknetGo::draw() {
+void ofxDarknetGo::drawBoard() {
     int swap = color;
     ofPushStyle();
     
     float margin = min(box.width, box.height) / 18.0;
     float rad = 0.48 * margin;
     
-    ofSetColor(ofColor::orange);
+    ofColor clr = ofColor::orange;
+    ofSetColor(clr);
     ofDrawRectangle(box.x, box.y, box.width, box.height);
-    const char * alphanum = {"ABCDEFGHJKLMNOPQRST"};
+    
     ofSetColor(0);
     for(int j = 0; j < 19; ++j){
         float x_ = ofMap(j, 0, 18, box.x, box.x+box.width);
@@ -237,9 +261,37 @@ void ofxDarknetGo::draw() {
                 ofFill();
                 ofDrawCircle(x_, y_, rad);
             }
+            else if(index == active) {
+                ofSetColor(color == 1 ? ofColor(0,127) : ofColor(255,127));
+                ofFill();
+                ofDrawCircle(x_, y_, rad);
+                ofNoFill();
+                ofSetColor(255, 0, 0, 127);
+                ofDrawCircle(x_, y_, rad);
+            }
         }
     }
     ofPopStyle();
+}
+
+void ofxDarknetGo::drawRecommendations(int x, int y){
+    ofPushMatrix();
+    ofTranslate(x, y);
+    ofDrawBitmapStringHighlight("Darknet recommends for "+ofToString((color==1?"black":"white"))+":", 0, 20);
+    for (int i=0; i<recommendations.size(); i++) {
+        int index = recommendations[i];
+        int row = index / 19;
+        int col = index % 19;
+        ofDrawBitmapStringHighlight(" #"+ofToString(i+1)+": "+alphanum[col]+""+ofToString((inverted)?19 - row : row+1)+", "+ofToString(probabilities[i]*100)+"%", 0, 40 + i*18);
+    }
+    ofPopMatrix();
+}
+
+void ofxDarknetGo::nextAuto() {
+    int index = recommendations[0];
+    int row = index / 19;
+    int col = index % 19;
+    makeMove(row, col);
 }
 
 void ofxDarknetGo::setup(string cfgfile, string weightfile) {
@@ -250,5 +302,25 @@ void ofxDarknetGo::setup(string cfgfile, string weightfile) {
     board = (float*)calloc(19*19, sizeof(float));
     move = (float*)calloc(19*19, sizeof(float));
     color = 1;
+    getRecommendations();
 }
 
+void ofxDarknetGo::mouseMoved(ofMouseEventArgs &evt){
+    float mx = box.width / 18.0;
+    float my = box.height / 18.0;
+    if (!ofRectangle(box.x-0.5*mx, box.y-0.5*my, box.width+mx, box.height+my).inside(evt.x, evt.y)) {
+        active = -1;
+        return;
+    }
+    int x = ofClamp(ofMap(evt.x, box.x-0.5*mx, box.x+box.width-0.5*mx, 0, 18), 0, 18);
+    int y = ofClamp(ofMap(evt.y, box.y-0.5*my, box.y+box.height-0.5*my, 0, 18), 0, 18);
+    active = y*19 + x;
+}
+
+void ofxDarknetGo::mousePressed(ofMouseEventArgs &evt){
+    if (active != -1) {
+        int row = active / 19;
+        int col = active % 19;
+        makeMove(row, col);
+    }
+}
