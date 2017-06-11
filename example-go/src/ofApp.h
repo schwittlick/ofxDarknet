@@ -14,8 +14,6 @@ public:
     void keyPressed(int key);
     
 	ofxDarknetGo darknet;
-    ofVideoGrabber cam;
-
     ofxPanel gui;
 };
 
