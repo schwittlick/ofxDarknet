@@ -15,7 +15,6 @@ void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string 
     if (nameslist != "") {
         labelsAvailable = true;
     }
-    cuda_set_device(0);
 	net = parse_network_cfg( cfgfile.c_str() );
     
 	load_weights( &net, weightfile.c_str() );
@@ -26,7 +25,7 @@ void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string 
     
     // load layer names
     int numLayerTypes = 24;
-    int counts[numLayerTypes];
+    int * counts = new int[ numLayerTypes ];
     for (int i=0; i<numLayerTypes; i++) {counts[i] = 0;}
     for (int i=0; i<net.n; i++) {
         LAYER_TYPE type = net.layers[i].type;
@@ -58,7 +57,7 @@ void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string 
         layerNames.push_back(layerName+" "+ofToString(counts[type]));
         counts[type] += 1;
     }
-    
+	delete counts;
     loaded = true;
 }
 
