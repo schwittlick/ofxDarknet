@@ -15,11 +15,10 @@ MS COCO dataset (80 different classes)
 * tiny-yolo.cfg & [tiny-yolo.weights](http://pjreddie.com/media/files/tiny-yolo.weights) (60 MB COCO-model)
 
 ```
-	std::string datacfg = ofToDataPath( "cfg/coco.data" );
 	std::string cfgfile = ofToDataPath( "cfg/tiny-yolo.cfg" );
 	std::string weightfile = ofToDataPath( "tiny-yolo.weights" );
 	std::string nameslist = ofToDataPath( "cfg/names.list" );
-	darknet.init( cfgfile, weightfile, datacfg, nameslist );
+	darknet.init( cfgfile, weightfile, nameslist );
 ```
 
 Pascal VOC dataset (20 different classes)
@@ -27,11 +26,10 @@ Pascal VOC dataset (20 different classes)
 * tiny-yolo-voc.cfg & [tiny-yolo-voc.weights](http://pjreddie.com/media/files/tiny-yolo-voc.weights) (60 MB VOC-model)
 
 ```
-	std::string datacfg = ofToDataPath( "cfg/voc.data" );
 	std::string cfgfile = ofToDataPath( "cfg/tiny-yolo-voc.cfg" );
 	std::string weightfile = ofToDataPath( "tiny-yolo-voc.weights" );
 	std::string nameslist = ofToDataPath( "cfg/voc.names" );
-	darknet.init( cfgfile, weightfile, datacfg, nameslist );
+	darknet.init( cfgfile, weightfile, nameslist );
 ```
 
 YOLO2 with 9000 classes
@@ -79,11 +77,10 @@ cfg: [darknet16.cfg](https://github.com/mrzl/ofxDarknet/blob/master/example-imag
 cfg: [darknet19_488.cfg](https://github.com/mrzl/ofxDarknet/blob/master/example-imagenet/src/bin/data/cfg/darknet19_448.cfg) weights: [darknet19_488.weights](http://pjreddie.com/media/files/darknet19_448.weights)
 
 ```
-	std::string datacfg = ofToDataPath( "cfg/imagenet1k.data" );
 	std::string cfgfile = ofToDataPath( "cfg/darknet.cfg" );
 	std::string weightfile = ofToDataPath( "darknet.weights" );
 	std::string nameslist = ofToDataPath( "cfg/imagenet.shortnames.list" );
-	darknet.init( cfgfile, weightfile, datacfg, nameslist );
+	darknet.init( cfgfile, weightfile, nameslist );
 
 	classifications = darknet.classify( image.getPixelsRef() );
 	int offset = 20;
