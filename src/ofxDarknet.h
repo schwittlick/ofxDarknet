@@ -37,7 +37,7 @@
 #include "nightmare.h"
 #include "rnn.h"
 
-#include "ofxOpenCv.h"
+//#include "ofxOpenCv.h"
 
 #ifdef OPENCV
 #include "opencv2/highgui/highgui_c.h"
