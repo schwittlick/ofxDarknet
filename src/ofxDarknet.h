@@ -37,9 +37,8 @@
 #include "nightmare.h"
 #include "rnn.h"
 
-#include "ofxOpenCv.h"
-
 #ifdef OPENCV
+#include <opencv2/opencv.hpp>
 #include "opencv2/highgui/highgui_c.h"
 #endif
 
@@ -78,6 +77,9 @@ public:
     
     std::vector< classification > classify( ofPixels & pix, int count = 5 );
     std::vector< detected_object > yolo( ofPixels & pix, float threshold = 0.24f, float maxOverlap = 0.5f );
+	#ifdef OPENCV
+	std::vector< detected_object > yolo(cv::InputArray & in, float threshold = 0.24f, float maxOverlap = 0.5f);
+	#endif
     std::vector< activations > getFeatureMaps(int idxLayer);
 
     ofImage nightmare( ofPixels & pix, int max_layer, int range, int norm, int rounds, int iters, int octaves, float rate, float thresh );
@@ -90,6 +92,10 @@ public:
 protected:
     image convert( ofPixels & pix );
     ofPixels convert( image & image );
+
+	#ifdef OPENCV
+	image convert(cv::Mat& in);
+	#endif
     
 	list1 *options1;
 	char **names;
@@ -97,6 +103,8 @@ protected:
 	network net;
     bool loaded;
     bool labelsAvailable;
+
+	std::vector< detected_object > processImage(image im, float threshold, float maxOverlap, int originalWidth, int originalHeight);
 };
 
 
