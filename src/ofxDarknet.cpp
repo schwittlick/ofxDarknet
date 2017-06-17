@@ -451,6 +451,7 @@ ofPixels ofxDarknet::convert( image & im )
 	return pix;
 }
 
+#ifdef OPENCV
 image ofxDarknet::convert(cv::Mat& in)
 {
 	unsigned char *data = (unsigned char *)in.data;
@@ -471,3 +472,4 @@ image ofxDarknet::convert(cv::Mat& in)
 
 	return im;
 }
+#endif
