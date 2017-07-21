@@ -31,7 +31,6 @@ common:
 	# specified here separated by spaces or one per line using +=
 	ADDON_INCLUDES = libs
 	ADDON_INCLUDES += src
-	ADDON_INCLUDES += /usr/local/cuda/include
 	ADDON_INCLUDES += libs/darknet/include
 
 	# any special flag that should be passed to the compiler when using this
@@ -71,6 +70,7 @@ msys2:
 
 
 osx:
+	ADDON_INCLUDES += /usr/local/cuda/include
 	ADDON_SOURCES_EXCLUDE = libs/3rdparty/include/pthread.h
 	ADDON_SOURCES_EXCLUDE += libs/3rdparty/include/sched.h
 	ADDON_SOURCES_EXCLUDE += libs/3rdparty/include/semaphore.h
