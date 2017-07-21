@@ -18,6 +18,9 @@ public:
     void drawFeatureMaps();
     void drawClassifications();
     
+    void setSourceWebcam();
+    void setSourceImage(string path);
+    
     ofImage pic;
     ofVideoGrabber grab;
     

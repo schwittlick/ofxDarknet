@@ -1,7 +1,8 @@
 #include "ofxDarknetGo.h"
 
 
-ofxDarknetGo::ofxDarknetGo() : ofxDarknet() {
+ofxDarknetGo::ofxDarknetGo() : ofxDarknet()
+{
     active = -1;
     inverted = 1;
     noi = 1;
@@ -189,7 +190,7 @@ void ofxDarknetGo::getRecommendations(){
         if(board[i]) move[i] = 0;
     }
     
-    int indexes[nind];
+    int * indexes = new int[ nind ];
     int row, col;
     top_k(move, 19*19, nind, indexes);
     //print_board(board, color, indexes);
@@ -203,6 +204,7 @@ void ofxDarknetGo::getRecommendations(){
         col = index % 19;
         //printf("%d: %c %d, %.2f%%\n", i+1, col + 'A' + 1*(col > 7 && noi), (inverted)?19 - row : row+1, move[index]*100);
     }
+	delete indexes;
 }
 
 void ofxDarknetGo::makeMove(int row, int col) {

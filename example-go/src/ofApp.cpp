@@ -3,7 +3,7 @@
 void ofApp::setup()
 {
     string cfgfile = ofToDataPath("cfg/go.test.cfg");
-    string weightfile = "/Users/gene/Learn/darknet/go.weights";//ofToDataPath("go.weights");
+    string weightfile = ofToDataPath( "go.weights");
     
     darknet.setup(cfgfile, weightfile);
     darknet.setMouseActive(true);

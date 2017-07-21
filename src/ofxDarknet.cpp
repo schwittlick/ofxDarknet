@@ -15,7 +15,6 @@ void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string 
     if (nameslist != "") {
         labelsAvailable = true;
     }
-    cuda_set_device(0);
 	net = parse_network_cfg( cfgfile.c_str() );
     
 	load_weights( &net, weightfile.c_str() );
@@ -26,7 +25,7 @@ void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string 
     
     // load layer names
     int numLayerTypes = 24;
-    int counts[numLayerTypes];
+    int * counts = new int[ numLayerTypes ];
     for (int i=0; i<numLayerTypes; i++) {counts[i] = 0;}
     for (int i=0; i<net.n; i++) {
         LAYER_TYPE type = net.layers[i].type;
@@ -58,8 +57,15 @@ void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string 
         layerNames.push_back(layerName+" "+ofToString(counts[type]));
         counts[type] += 1;
     }
-    
+	delete counts;
     loaded = true;
+}
+
+float * ofxDarknet::get_network_output_layer_gpu(int i)
+{
+    layer l = net.layers[i];
+    if(l.type != REGION) cuda_pull_array(l.output_gpu, l.output, l.outputs*l.batch);
+    return l.output;
 }
 
 std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold /*= 0.24f */, float maxOverlap /*= 0.5f */ )
@@ -90,7 +96,7 @@ std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold
     
     int feature_layer = net.n - 2;
     layer l1 = net.layers[ feature_layer ];
-    float * features = get_network_output_layer_gpu(net, feature_layer);
+    float * features = get_network_output_layer_gpu(feature_layer);
     
     vector<size_t> sorted(num);
     iota(sorted.begin(), sorted.end(), 0);
@@ -219,7 +225,7 @@ std::vector< activations > ofxDarknet::getFeatureMaps(int idxLayer)  {
         return maps;
     }
     
-    float * layer = get_network_output_layer_gpu( net, idxLayer);
+    float * layer = get_network_output_layer_gpu(idxLayer);
     auto l = net.layers[idxLayer];
     
     int channels = l.out_c;

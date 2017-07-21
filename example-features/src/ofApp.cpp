@@ -10,9 +10,16 @@ void ofApp::setup()
     std::string nameslist = ofToDataPath( "cfg/imagenet.shortnames.list" );
     
     darknet.init( cfgfile, weightfile, nameslist );
+
+	inputMode = 1;
     
     numClassifications = 50;
-    grab.initGrabber(640, 480);
+	if( inputMode == 0 ) {
+        setSourceWebcam();
+	}
+	else {
+		setSourceImage( "kitty.jpg" );
+	}
 }
 
 void ofApp::update() {
@@ -21,7 +28,10 @@ void ofApp::update() {
         if (grab.isFrameNew()) {
             classifications = darknet.classify(grab.getPixels(), numClassifications);
         }
-    }
+	}
+	else {
+		classifications = darknet.classify( pic.getPixels(), numClassifications );
+	}
 }
 
 void ofApp::draw() {
@@ -150,14 +160,30 @@ void ofApp::mouseDragged(int x, int y, int button) {
 
 }
 
+void ofApp::setSourceWebcam() {
+    inputMode = 0;
+    if (!grab.isInitialized()) {
+        grab.initGrabber( 640, 480 );
+    }
+}
+
+void ofApp::setSourceImage(string path) {
+    inputMode = 1;
+    pic.load(path);
+    classifications = darknet.classify(pic.getPixels(), numClassifications);
+    if (grab.isInitialized()) {
+        grab.close();
+    }
+}
+
 void ofApp::mousePressed(int x, int y, int button) {
-    if (ofRectangle(10, 315, 200, 20).inside(x, y)) inputMode = 0;
+    if (ofRectangle(10, 315, 200, 20).inside(x, y)) {
+        setSourceWebcam();
+    }
     else if (ofRectangle(10, 338, 200, 20).inside(x, y)) {
         ofFileDialogResult result = ofSystemLoadDialog("Select an image");
         if (result.bSuccess) {
-            inputMode = 1;
-            pic.load(result.filePath);
-            classifications = darknet.classify(pic.getPixels(), numClassifications);
+            setSourceImage(result.filePath);
         }
     }
     else {

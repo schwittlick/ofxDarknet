@@ -71,21 +71,23 @@ typedef struct network_state {
     network net;
 } network_state;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #ifdef GPU
-	float train_networks( network *nets, int n, data1 d, int interval );
-	void sync_nets( network *nets, int n, int interval );
-	float train_network_datum_gpu( network net, float *x, float *y );
-	float *network_predict_gpu( network net, float *input );
-	float * get_network_output_layer_gpu( network net, int i );
-	float * get_network_delta_gpu_layer( network net, int i );
-	float *get_network_output_gpu( network net );
-	void forward_network_gpu( network net, network_state state );
-	void backward_network_gpu( network net, network_state state );
-	void update_network_gpu( network net );
+float train_networks( network *nets, int n, data1 d, int interval );
+void sync_nets( network *nets, int n, int interval );
+float train_network_datum_gpu( network net, float *x, float *y );
+float *network_predict_gpu( network net, float *input );
+float * get_network_output_layer_gpu( network net, int i );
+float * get_network_delta_gpu_layer( network net, int i );
+float *get_network_output_gpu( network net );
+void forward_network_gpu( network net, network_state state );
+void backward_network_gpu( network net, network_state state );
+void update_network_gpu( network net );
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 	float get_current_rate( network net );
