@@ -173,7 +173,6 @@ There are some more necessary steps that don't work with the OF project generato
 
 * Compile as Debug or Release in x64 mode
 * Within VS2015 Solution Explorer, rightclick on the generated project -> Build Dependencies -> Build Customizations -> Tick CUDA 8.0
-* C/C++ -> All Options -> Compile As -> Default
 * Copy pthreadVC2.dll from ofxDarknet\libs\3rdparty\dll\x64 to your applications bin folder
 
 ### OSX
