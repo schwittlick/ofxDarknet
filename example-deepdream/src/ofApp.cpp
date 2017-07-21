@@ -2,7 +2,7 @@
 
 void ofApp::setup()
 {
-    string cfgfile = "cfg/vgg-conv.cfg";
+    string cfgfile = ofToDataPath("cfg/vgg-conv.cfg");
     string weightfile = "vgg-conv.weights";
     darknet.init( cfgfile, weightfile );
 

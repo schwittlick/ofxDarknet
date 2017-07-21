@@ -15,10 +15,10 @@ void ofApp::setup()
     
     numClassifications = 50;
 	if( inputMode == 0 ) {
-		grab.initGrabber( 640, 480 );
+        setSourceWebcam();
 	}
 	else {
-		pic.load( "image.jpg" );
+		setSourceImage( "kitty.jpg" );
 	}
 }
 
@@ -160,14 +160,30 @@ void ofApp::mouseDragged(int x, int y, int button) {
 
 }
 
+void ofApp::setSourceWebcam() {
+    inputMode = 0;
+    if (!grab.isInitialized()) {
+        grab.initGrabber( 640, 480 );
+    }
+}
+
+void ofApp::setSourceImage(string path) {
+    inputMode = 1;
+    pic.load(path);
+    classifications = darknet.classify(pic.getPixels(), numClassifications);
+    if (grab.isInitialized()) {
+        grab.close();
+    }
+}
+
 void ofApp::mousePressed(int x, int y, int button) {
-    if (ofRectangle(10, 315, 200, 20).inside(x, y)) inputMode = 0;
+    if (ofRectangle(10, 315, 200, 20).inside(x, y)) {
+        setSourceWebcam();
+    }
     else if (ofRectangle(10, 338, 200, 20).inside(x, y)) {
         ofFileDialogResult result = ofSystemLoadDialog("Select an image");
         if (result.bSuccess) {
-            inputMode = 1;
-            pic.load(result.filePath);
-            classifications = darknet.classify(pic.getPixels(), numClassifications);
+            setSourceImage(result.filePath);
         }
     }
     else {

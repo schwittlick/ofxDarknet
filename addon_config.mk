@@ -31,8 +31,8 @@ common:
 	# specified here separated by spaces or one per line using +=
 	ADDON_INCLUDES = libs
 	ADDON_INCLUDES += src
+	ADDON_INCLUDES += /usr/local/cuda/include
 	ADDON_INCLUDES += libs/darknet/include
-	ADDON_INCLUDES += libs/3rdparty/include
 
 	# any special flag that should be passed to the compiler when using this
 	# addon
@@ -53,6 +53,11 @@ common:
 	# in the src folders in libs and the root of the addon. if your addon needs
 	# to include files in different places or a different set of files per platform
 	# they can be specified here
+	#ADDON_SOURCES = src/ofxDarknet.cpp
+	#ADDON_SOURCES += src/ofxDarknet.h
+	#ADDON_SOURCES += src/ofxDarknetGo.cpp
+	#ADDON_SOURCES += src/ofxDarknetGo.h
+	#ADDON_SOURCES += libs/darknet/include/%
 	
 	# some addons need resources to be copied to the bin/data folder of the project
 	# specify here any files that need to be copied, you can use wildcards like * and ?
@@ -64,3 +69,12 @@ common:
 	
 msys2:
 
+
+osx:
+	ADDON_SOURCES_EXCLUDE = libs/3rdparty/include/pthread.h
+	ADDON_SOURCES_EXCLUDE += libs/3rdparty/include/sched.h
+	ADDON_SOURCES_EXCLUDE += libs/3rdparty/include/semaphore.h
+	ADDON_SOURCES_EXCLUDE += libs/cuda/include/cudnn.h
+
+vs:
+	ADDON_INCLUDES += libs/3rdparty/include

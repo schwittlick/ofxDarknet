@@ -61,6 +61,13 @@ void ofxDarknet::init( std::string cfgfile, std::string weightfile, std::string 
     loaded = true;
 }
 
+float * ofxDarknet::get_network_output_layer_gpu(int i)
+{
+    layer l = net.layers[i];
+    if(l.type != REGION) cuda_pull_array(l.output_gpu, l.output, l.outputs*l.batch);
+    return l.output;
+}
+
 std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold /*= 0.24f */, float maxOverlap /*= 0.5f */ )
 {
 	int originalWidth = pix.getWidth();
@@ -89,7 +96,7 @@ std::vector< detected_object > ofxDarknet::yolo( ofPixels & pix, float threshold
     
     int feature_layer = net.n - 2;
     layer l1 = net.layers[ feature_layer ];
-    float * features = get_network_output_layer_gpu(net, feature_layer);
+    float * features = get_network_output_layer_gpu(feature_layer);
     
     vector<size_t> sorted(num);
     iota(sorted.begin(), sorted.end(), 0);
@@ -218,7 +225,7 @@ std::vector< activations > ofxDarknet::getFeatureMaps(int idxLayer)  {
         return maps;
     }
     
-    float * layer = get_network_output_layer_gpu( net, idxLayer);
+    float * layer = get_network_output_layer_gpu(idxLayer);
     auto l = net.layers[idxLayer];
     
     int channels = l.out_c;
