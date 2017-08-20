@@ -52,7 +52,7 @@ LIST(REMOVE_ITEM SRC_FILES "${SRC_DIR}/darknet.c")
 
 if (CUDA_FOUND)
     FILE(GLOB CU_SRC_FILES ${SRC_DIR}/*.cu)
-
+    
     CUDA_INCLUDE_DIRECTORIES( ${SRC_DIR} )
 
     set(CUDA_ARCH_BIN "20 30 32 35 37 50 52" CACHE STRING "Specify 'real' GPU arch to build binaries for, BIN(PTX) format is supported. Example: 1.3 2.1(1.3) or 13 21(13)")
@@ -74,14 +74,17 @@ endif()
 set( LIB_TYPE "SHARED" )
 #set( LIB_TYPE "STATIC" )
 
+
+
+
 if( APPLE )
     message( STATUS "Building ${LIB_TYPE} for APPLE" )
     set( LIB_NAME           darknetOSX )
     set( LIB_PATH_INSTALL  ${PROJECT_SOURCE_DIR}/../lib/osx/ )
-elseif( LINUX )
+elseif( UNIX )
     message( STATUS "Building ${LIB_TYPE} for LINUX" )
     set( LIB_NAME           darknetLinux )
-    set( LIB_PATH_INSTALL  ${PROJECT_SOURCE_DIR}/../lib/linux/ )
+    set( LIB_PATH_INSTALL  ${PROJECT_SOURCE_DIR}/../lib/linux64/ )
 endif()
 
 
@@ -99,4 +102,3 @@ set_target_properties(  ${LIB_NAME}
 # -------- EXECUTABLE CREATION (NOT OPENFRAMEWORKS) ---------
 #add_executable(darknet ${SRC_DIR}/darknet.c)
 #target_link_libraries(darknet ${LIBRARIES} ${LIB_NAME})
-#target_link_libraries(darknet ${LIB_NAME})
